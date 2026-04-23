@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <defs>
+    <linearGradient id="bg-97-a" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:hsl(73,18%,88%)"/>
+      <stop offset="55%" style="stop-color:hsl(108,12%,78%)"/>
+      <stop offset="100%" style="stop-color:hsl(73,8%,68%)"/>
+    </linearGradient>
+    <filter id="grain-97" x="0" y="0">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch" result="n"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.04 0" in="n" result="g"/>
+      <feBlend in="SourceGraphic" in2="g" mode="multiply"/>
+    </filter>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg-97-a)"/>
+  <rect width="800" height="1000" filter="url(#grain-97)" opacity="0.5"/>
+  <rect x="72" y="96" width="656" height="760" rx="6" fill="rgba(255,255,255,0.14)" stroke="rgba(0,0,0,0.06)"/>
+  
+  <g opacity="0.88" transform="translate(0,0)" fill="none" stroke="#0a0a0a" stroke-width="2.2" stroke-linejoin="round">
+    <path d="M260 460 Q400 420 540 460 Q520 560 400 600 Q280 560 260 460 Z" fill="rgba(255,255,255,0.3)"/>
+    <path d="M300 500 Q400 480 500 500"/>
+  </g>
+  <text x="400" y="900" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#18181b" opacity="0.35">실크 스퀘어 스카프</text>
+  <text x="400" y="928" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" letter-spacing="0.2em" fill="#18181b" opacity="0.28">REJINA PYO</text>
+  <text x="400" y="956" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#18181b" opacity="0.22">#97</text>
+</svg>

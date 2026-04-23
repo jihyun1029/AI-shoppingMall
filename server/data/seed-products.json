@@ -1,0 +1,2487 @@
+[
+  {
+    "id": "1",
+    "brand": "MUSINSA STANDARD",
+    "brandId": "musinsa-standard",
+    "name": "에센셜 코튼 크루넥 반팔 티셔츠",
+    "category": "top",
+    "price": 26100,
+    "originalPrice": 29000,
+    "images": [
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "white",
+        "name": "화이트",
+        "hex": "#fafafa"
+      },
+      {
+        "id": "melange",
+        "name": "멜란지",
+        "hex": "#a8a29e"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[상의 · 반팔티] MUSINSA STANDARD — 에센셜 코튼 크루넥 반팔 티셔츠. 평점 4.6 (842개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 99,
+    "createdAt": "2026-02-02",
+    "subCategory": "반팔티",
+    "discountRate": 10,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 320,
+    "rating": 4.6,
+    "reviewCount": 842,
+    "image": "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "2",
+    "brand": "COVERNAT",
+    "brandId": "covernat",
+    "name": "어센틱 로고 그래픽 반팔 티",
+    "category": "top",
+    "price": 38250,
+    "originalPrice": 45000,
+    "images": [
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "cream",
+        "name": "크림",
+        "hex": "#fef9c3"
+      },
+      {
+        "id": "olive",
+        "name": "올리브",
+        "hex": "#3f3f46"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[상의 · 반팔티] COVERNAT — 어센틱 로고 그래픽 반팔 티. 평점 4.5 (512개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 80,
+    "createdAt": "2026-03-03",
+    "subCategory": "반팔티",
+    "discountRate": 15,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 180,
+    "rating": 4.5,
+    "reviewCount": 512,
+    "image": "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "3",
+    "brand": "THISISNEVERTHAT",
+    "brandId": "thisisneverthat",
+    "name": "티엔티 클래식 긴팔 티셔츠",
+    "category": "top",
+    "price": 45760,
+    "originalPrice": 52000,
+    "images": [
+      "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "charcoal",
+        "name": "차콜",
+        "hex": "#374151"
+      },
+      {
+        "id": "white",
+        "name": "화이트",
+        "hex": "#fafafa"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[상의 · 긴팔티] THISISNEVERTHAT — 티엔티 클래식 긴팔 티셔츠. 평점 4.7 (391개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 87,
+    "createdAt": "2026-04-04",
+    "subCategory": "긴팔티",
+    "discountRate": 12,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 210,
+    "rating": 4.7,
+    "reviewCount": 391,
+    "image": "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "4",
+    "brand": "ADERERROR",
+    "brandId": "adererror",
+    "name": "모듈러 스티치 긴소매 티",
+    "category": "top",
+    "price": 81880,
+    "originalPrice": 89000,
+    "images": [
+      "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "blue",
+        "name": "블루",
+        "hex": "#2563eb"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      },
+      {
+        "id": "burgundy",
+        "name": "버건디",
+        "hex": "#7f1d1d"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "description": "[상의 · 긴팔티] ADERERROR — 모듈러 스티치 긴소매 티. 평점 4.4 (267개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 71,
+    "createdAt": "2026-05-05",
+    "subCategory": "긴팔티",
+    "discountRate": 8,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 95,
+    "rating": 4.4,
+    "reviewCount": 267,
+    "image": "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "5",
+    "brand": "A.P.C.",
+    "brandId": "a-p-c",
+    "name": "미니멀 코튼 포켓 셔츠",
+    "category": "top",
+    "price": 142400,
+    "originalPrice": 178000,
+    "images": [
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "sky-blue",
+        "name": "스카이블루",
+        "hex": "#7dd3fc"
+      },
+      {
+        "id": "white",
+        "name": "화이트",
+        "hex": "#fafafa"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[상의 · 셔츠] A.P.C. — 미니멀 코튼 포켓 셔츠. 평점 4.8 (156개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 72,
+    "createdAt": "2026-06-06",
+    "subCategory": "셔츠",
+    "discountRate": 20,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 74,
+    "rating": 4.8,
+    "reviewCount": 156,
+    "image": "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "6",
+    "brand": "MUSINSA STANDARD",
+    "brandId": "musinsa-standard",
+    "name": "릴렉스 핏 옥스포드 셔츠",
+    "category": "top",
+    "price": 69000,
+    "images": [
+      "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "white",
+        "name": "화이트",
+        "hex": "#fafafa"
+      },
+      {
+        "id": "light-blue",
+        "name": "라이트블루",
+        "hex": "#93c5fd"
+      },
+      {
+        "id": "beige",
+        "name": "베이지",
+        "hex": "#d6d3d1"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[상의 · 셔츠] MUSINSA STANDARD — 릴렉스 핏 옥스포드 셔츠. 평점 4.3 (428개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 82,
+    "createdAt": "2026-07-07",
+    "subCategory": "셔츠",
+    "discountRate": 0,
+    "isBest": true,
+    "gender": "male",
+    "stock": 260,
+    "rating": 4.3,
+    "reviewCount": 428,
+    "image": "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "7",
+    "brand": "CHAMPION",
+    "brandId": "champion",
+    "name": "리버스 위브 맨투맨",
+    "category": "top",
+    "price": 59250,
+    "originalPrice": 79000,
+    "images": [
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      },
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[상의 · 맨투맨] CHAMPION — 리버스 위브 맨투맨. 평점 4.5 (903개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 99,
+    "createdAt": "2026-08-08",
+    "subCategory": "맨투맨",
+    "discountRate": 25,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 340,
+    "rating": 4.5,
+    "reviewCount": 903,
+    "image": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "8",
+    "brand": "MAHAGRID",
+    "brandId": "mahagrid",
+    "name": "시그니처 로고 맨투맨 스웨트",
+    "category": "top",
+    "price": 50840,
+    "originalPrice": 62000,
+    "images": [
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "melange",
+        "name": "멜란지",
+        "hex": "#a8a29e"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "cream",
+        "name": "크림",
+        "hex": "#fef9c3"
+      },
+      {
+        "id": "brown",
+        "name": "브라운",
+        "hex": "#78350f"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "description": "[상의 · 맨투맨] MAHAGRID — 시그니처 로고 맨투맨 스웨트. 평점 4.6 (1204개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 99,
+    "createdAt": "2026-09-09",
+    "subCategory": "맨투맨",
+    "discountRate": 18,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 410,
+    "rating": 4.6,
+    "reviewCount": 1204,
+    "image": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "9",
+    "brand": "NIKE",
+    "brandId": "nike",
+    "name": "스포츠웨어 클럽 플리스 후드",
+    "category": "top",
+    "price": 66300,
+    "originalPrice": 85000,
+    "images": [
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      },
+      {
+        "id": "dark-grey",
+        "name": "다크그레이",
+        "hex": "#4b5563"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[상의 · 후드] NIKE — 스포츠웨어 클럽 플리스 후드. 평점 4.7 (2156개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 99,
+    "createdAt": "2026-10-10",
+    "subCategory": "후드",
+    "discountRate": 22,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 520,
+    "rating": 4.7,
+    "reviewCount": 2156,
+    "image": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "10",
+    "brand": "LMC",
+    "brandId": "lmc",
+    "name": "오가닉 헤비웨이트 후드 집업",
+    "category": "top",
+    "price": 88200,
+    "originalPrice": 98000,
+    "images": [
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "khaki",
+        "name": "카키",
+        "hex": "#57534e"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      }
+    ],
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[상의 · 후드] LMC — 오가닉 헤비웨이트 후드 집업. 평점 4.4 (331개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 73,
+    "createdAt": "2026-11-11",
+    "subCategory": "후드",
+    "discountRate": 10,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 142,
+    "rating": 4.4,
+    "reviewCount": 331,
+    "image": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "11",
+    "brand": "CARHARTT WIP",
+    "brandId": "carhartt-wip",
+    "name": "디트로이트 덕 캔버스 워크 자켓",
+    "category": "outer",
+    "price": 174240,
+    "originalPrice": 198000,
+    "images": [
+      "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "brown",
+        "name": "브라운",
+        "hex": "#78350f"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "olive",
+        "name": "올리브",
+        "hex": "#3f3f46"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[아우터 · 자켓] CARHARTT WIP — 디트로이트 덕 캔버스 워크 자켓. 평점 4.8 (672개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 98,
+    "createdAt": "2026-12-12",
+    "subCategory": "자켓",
+    "discountRate": 12,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 198,
+    "rating": 4.8,
+    "reviewCount": 672,
+    "image": "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "12",
+    "brand": "COVERNAT",
+    "brandId": "covernat",
+    "name": "코듀로이 트러커 자켓",
+    "category": "outer",
+    "price": 142800,
+    "originalPrice": 168000,
+    "images": [
+      "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "beige",
+        "name": "베이지",
+        "hex": "#d6d3d1"
+      },
+      {
+        "id": "brown",
+        "name": "브라운",
+        "hex": "#78350f"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "description": "[아우터 · 자켓] COVERNAT — 코듀로이 트러커 자켓. 평점 4.5 (289개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 73,
+    "createdAt": "2026-01-13",
+    "subCategory": "자켓",
+    "discountRate": 15,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 121,
+    "rating": 4.5,
+    "reviewCount": 289,
+    "image": "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "13",
+    "brand": "ADERERROR",
+    "brandId": "adererror",
+    "name": "커브 패널 나일론 윈드 자켓",
+    "category": "outer",
+    "price": 301760,
+    "originalPrice": 328000,
+    "images": [
+      "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "silver",
+        "name": "실버",
+        "hex": "#d4d4d8"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      }
+    ],
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[아우터 · 자켓] ADERERROR — 커브 패널 나일론 윈드 자켓. 평점 4.6 (198개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 71,
+    "createdAt": "2026-02-14",
+    "subCategory": "자켓",
+    "discountRate": 8,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 67,
+    "rating": 4.6,
+    "reviewCount": 198,
+    "image": "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "14",
+    "brand": "MUSINSA STANDARD",
+    "brandId": "musinsa-standard",
+    "name": "발마칸 싱글 롱 코트",
+    "category": "outer",
+    "price": 207200,
+    "originalPrice": 259000,
+    "images": [
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "charcoal",
+        "name": "차콜",
+        "hex": "#374151"
+      },
+      {
+        "id": "camel",
+        "name": "카멜",
+        "hex": "#b45309"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[아우터 · 코트] MUSINSA STANDARD — 발마칸 싱글 롱 코트. 평점 4.7 (445개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 89,
+    "createdAt": "2026-03-15",
+    "subCategory": "코트",
+    "discountRate": 20,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 156,
+    "rating": 4.7,
+    "reviewCount": 445,
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "15",
+    "brand": "A.P.C.",
+    "brandId": "a-p-c",
+    "name": "울 블렌드 더블 체스터 코트",
+    "category": "outer",
+    "price": 490360,
+    "originalPrice": 598000,
+    "images": [
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "camel2",
+        "name": "캐멀",
+        "hex": "#b45309"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "description": "[아우터 · 코트] A.P.C. — 울 블렌드 더블 체스터 코트. 평점 4.9 (112개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 72,
+    "createdAt": "2026-04-16",
+    "subCategory": "코트",
+    "discountRate": 18,
+    "isBest": false,
+    "gender": "female",
+    "stock": 48,
+    "rating": 4.9,
+    "reviewCount": 112,
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "16",
+    "brand": "THISISNEVERTHAT",
+    "brandId": "thisisneverthat",
+    "name": "울 체크 맥 코트",
+    "category": "outer",
+    "price": 350100,
+    "originalPrice": 389000,
+    "images": [
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "brown-check",
+        "name": "브라운체크",
+        "hex": "#92400e"
+      },
+      {
+        "id": "navy-check",
+        "name": "네이비체크",
+        "hex": "#1e3a8a"
+      }
+    ],
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[아우터 · 코트] THISISNEVERTHAT — 울 체크 맥 코트. 평점 4.5 (203개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 70,
+    "createdAt": "2026-05-17",
+    "subCategory": "코트",
+    "discountRate": 10,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 89,
+    "rating": 4.5,
+    "reviewCount": 203,
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "17",
+    "brand": "NIKE",
+    "brandId": "nike",
+    "name": "스톰핏 윈드러너 패딩 재킷",
+    "category": "outer",
+    "price": 179280,
+    "originalPrice": 249000,
+    "images": [
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "olive",
+        "name": "올리브",
+        "hex": "#3f3f46"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[아우터 · 패딩] NIKE — 스톰핏 윈드러너 패딩 재킷. 평점 4.6 (1523개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 99,
+    "createdAt": "2026-06-18",
+    "subCategory": "패딩",
+    "discountRate": 28,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 380,
+    "rating": 4.6,
+    "reviewCount": 1523,
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "18",
+    "brand": "COVERNAT",
+    "brandId": "covernat",
+    "name": "RDS 구스다운 숏 패딩",
+    "category": "outer",
+    "price": 253300,
+    "originalPrice": 298000,
+    "images": [
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "cream",
+        "name": "크림",
+        "hex": "#fef9c3"
+      },
+      {
+        "id": "khaki",
+        "name": "카키",
+        "hex": "#57534e"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[아우터 · 패딩] COVERNAT — RDS 구스다운 숏 패딩. 평점 4.8 (887개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 99,
+    "createdAt": "2026-07-19",
+    "subCategory": "패딩",
+    "discountRate": 15,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 265,
+    "rating": 4.8,
+    "reviewCount": 887,
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "19",
+    "brand": "MUSINSA STANDARD",
+    "brandId": "musinsa-standard",
+    "name": "라이트웨이트 퀼팅 패딩 베스트",
+    "category": "outer",
+    "price": 122550,
+    "originalPrice": 129000,
+    "images": [
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      },
+      {
+        "id": "beige",
+        "name": "베이지",
+        "hex": "#d6d3d1"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "description": "[아우터 · 패딩] MUSINSA STANDARD — 라이트웨이트 퀼팅 패딩 베스트. 평점 4.4 (356개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 73,
+    "createdAt": "2026-08-20",
+    "subCategory": "패딩",
+    "discountRate": 5,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 198,
+    "rating": 4.4,
+    "reviewCount": 356,
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "20",
+    "brand": "NEW BALANCE",
+    "brandId": "new-balance",
+    "name": "히트 패딩 다운 파카",
+    "category": "outer",
+    "price": 175200,
+    "originalPrice": 219000,
+    "images": [
+      "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      }
+    ],
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[아우터 · 패딩] NEW BALANCE — 히트 패딩 다운 파카. 평점 4.5 (612개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 91,
+    "createdAt": "2026-09-21",
+    "subCategory": "패딩",
+    "discountRate": 20,
+    "isBest": true,
+    "gender": "male",
+    "stock": 174,
+    "rating": 4.5,
+    "reviewCount": 612,
+    "image": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "21",
+    "brand": "LEVI'S",
+    "brandId": "levis",
+    "name": "501 오리지널 스트레이트 데님",
+    "category": "bottom",
+    "price": 113980,
+    "originalPrice": 139000,
+    "images": [
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "indigo",
+        "name": "인디고",
+        "hex": "#312e81"
+      },
+      {
+        "id": "medium-blue",
+        "name": "미디엄블루",
+        "hex": "#3b82f6"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "description": "[하의 · 청바지] LEVI'S — 501 오리지널 스트레이트 데님. 평점 4.7 (2401개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 99,
+    "createdAt": "2026-10-22",
+    "subCategory": "청바지",
+    "discountRate": 18,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 450,
+    "rating": 4.7,
+    "reviewCount": 2401,
+    "image": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "22",
+    "brand": "MUSINSA STANDARD",
+    "brandId": "musinsa-standard",
+    "name": "슬림 테이퍼드 크롭 데님",
+    "category": "bottom",
+    "price": 69520,
+    "originalPrice": 79000,
+    "images": [
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "light-blue",
+        "name": "라이트블루",
+        "hex": "#93c5fd"
+      },
+      {
+        "id": "dark-blue",
+        "name": "다크블루",
+        "hex": "#1e40af"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34"
+    ],
+    "description": "[하의 · 청바지] MUSINSA STANDARD — 슬림 테이퍼드 크롭 데님. 평점 4.5 (678개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 86,
+    "createdAt": "2026-11-23",
+    "subCategory": "청바지",
+    "discountRate": 12,
+    "isBest": false,
+    "gender": "female",
+    "stock": 230,
+    "rating": 4.5,
+    "reviewCount": 678,
+    "image": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "23",
+    "brand": "COVERNAT",
+    "brandId": "covernat",
+    "name": "와이드 핏 워시드 데님 팬츠",
+    "category": "bottom",
+    "price": 106200,
+    "originalPrice": 118000,
+    "images": [
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "indigo",
+        "name": "인디고",
+        "hex": "#312e81"
+      },
+      {
+        "id": "light-denim",
+        "name": "연청",
+        "hex": "#93c5fd"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "description": "[하의 · 청바지] COVERNAT — 와이드 핏 워시드 데님 팬츠. 평점 4.6 (512개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 89,
+    "createdAt": "2026-12-24",
+    "subCategory": "청바지",
+    "discountRate": 10,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 189,
+    "rating": 4.6,
+    "reviewCount": 512,
+    "image": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "24",
+    "brand": "DICKIES",
+    "brandId": "dickies",
+    "name": "874 워크 데님 팬츠",
+    "category": "bottom",
+    "price": 69420,
+    "originalPrice": 89000,
+    "images": [
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "stonewash",
+        "name": "스톤워시",
+        "hex": "#94a3b8"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "description": "[하의 · 청바지] DICKIES — 874 워크 데님 팬츠. 평점 4.4 (891개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 91,
+    "createdAt": "2026-01-25",
+    "subCategory": "청바지",
+    "discountRate": 22,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 310,
+    "rating": 4.4,
+    "reviewCount": 891,
+    "image": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "25",
+    "brand": "MUSINSA STANDARD",
+    "brandId": "musinsa-standard",
+    "name": "테이퍼드 울 블렌드 슬랙스",
+    "category": "bottom",
+    "price": 75650,
+    "originalPrice": 89000,
+    "images": [
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "charcoal",
+        "name": "차콜",
+        "hex": "#374151"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "beige",
+        "name": "베이지",
+        "hex": "#d6d3d1"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[하의 · 슬랙스] MUSINSA STANDARD — 테이퍼드 울 블렌드 슬랙스. 평점 4.5 (423개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 85,
+    "createdAt": "2026-02-26",
+    "subCategory": "슬랙스",
+    "discountRate": 15,
+    "isBest": true,
+    "gender": "male",
+    "stock": 201,
+    "rating": 4.5,
+    "reviewCount": 423,
+    "image": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "26",
+    "brand": "A.P.C.",
+    "brandId": "a-p-c",
+    "name": "크롭 핀스트라이프 슬랙스",
+    "category": "bottom",
+    "price": 198400,
+    "originalPrice": 248000,
+    "images": [
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "description": "[하의 · 슬랙스] A.P.C. — 크롭 핀스트라이프 슬랙스. 평점 4.7 (134개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 70,
+    "createdAt": "2026-03-27",
+    "subCategory": "슬랙스",
+    "discountRate": 20,
+    "isBest": false,
+    "gender": "female",
+    "stock": 62,
+    "rating": 4.7,
+    "reviewCount": 134,
+    "image": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "27",
+    "brand": "THISISNEVERTHAT",
+    "brandId": "thisisneverthat",
+    "name": "와이드 플리츠 슬랙스",
+    "category": "bottom",
+    "price": 126960,
+    "originalPrice": 138000,
+    "images": [
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      },
+      {
+        "id": "brown",
+        "name": "브라운",
+        "hex": "#78350f"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[하의 · 슬랙스] THISISNEVERTHAT — 와이드 플리츠 슬랙스. 평점 4.4 (267개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 71,
+    "createdAt": "2026-04-01",
+    "subCategory": "슬랙스",
+    "discountRate": 8,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 145,
+    "rating": 4.4,
+    "reviewCount": 267,
+    "image": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "28",
+    "brand": "ADERERROR",
+    "brandId": "adererror",
+    "name": "비대칭 시크 슬랙 팬츠",
+    "category": "bottom",
+    "price": 191840,
+    "originalPrice": 218000,
+    "images": [
+      "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "charcoal",
+        "name": "차콜",
+        "hex": "#374151"
+      }
+    ],
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[하의 · 슬랙스] ADERERROR — 비대칭 시크 슬랙 팬츠. 평점 4.5 (189개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 69,
+    "createdAt": "2026-05-02",
+    "subCategory": "슬랙스",
+    "discountRate": 12,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 88,
+    "rating": 4.5,
+    "reviewCount": 189,
+    "image": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "29",
+    "brand": "NIKE",
+    "brandId": "nike",
+    "name": "클럽 플리스 쇼츠",
+    "category": "bottom",
+    "price": 33750,
+    "originalPrice": 45000,
+    "images": [
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "description": "[하의 · 반바지] NIKE — 클럽 플리스 쇼츠. 평점 4.6 (1120개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 99,
+    "createdAt": "2026-06-03",
+    "subCategory": "반바지",
+    "discountRate": 25,
+    "isBest": true,
+    "gender": "male",
+    "stock": 400,
+    "rating": 4.6,
+    "reviewCount": 1120,
+    "image": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "30",
+    "brand": "CHAMPION",
+    "brandId": "champion",
+    "name": "리버스 위브 스웨트 쇼츠",
+    "category": "bottom",
+    "price": 45100,
+    "originalPrice": 55000,
+    "images": [
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      },
+      {
+        "id": "oxblood",
+        "name": "옥스블러드",
+        "hex": "#7f1d1d"
+      },
+      {
+        "id": "melange",
+        "name": "멜란지",
+        "hex": "#a8a29e"
+      }
+    ],
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "description": "[하의 · 반바지] CHAMPION — 리버스 위브 스웨트 쇼츠. 평점 4.5 (534개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 81,
+    "createdAt": "2026-07-04",
+    "subCategory": "반바지",
+    "discountRate": 18,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 220,
+    "rating": 4.5,
+    "reviewCount": 534,
+    "image": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "31",
+    "brand": "NIKE",
+    "brandId": "nike",
+    "name": "에어 포스 1 07 로우",
+    "category": "shoes",
+    "price": 132050,
+    "originalPrice": 139000,
+    "images": [
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "white",
+        "name": "화이트",
+        "hex": "#fafafa"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "triple-white",
+        "name": "트리플화이트",
+        "hex": "#ffffff"
+      }
+    ],
+    "sizes": [
+      "250",
+      "260",
+      "265",
+      "270",
+      "275",
+      "280"
+    ],
+    "description": "[신발 · 스니커즈] NIKE — 에어 포스 1 07 로우. 평점 4.8 (5621개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 99,
+    "createdAt": "2026-08-05",
+    "subCategory": "스니커즈",
+    "discountRate": 5,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 800,
+    "rating": 4.8,
+    "reviewCount": 5621,
+    "image": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "32",
+    "brand": "NEW BALANCE",
+    "brandId": "new-balance",
+    "name": "574 레거 스니커즈",
+    "category": "shoes",
+    "price": 101150,
+    "originalPrice": 119000,
+    "images": [
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "250",
+      "260",
+      "270",
+      "280"
+    ],
+    "description": "[신발 · 스니커즈] NEW BALANCE — 574 레거 스니커즈. 평점 4.7 (3210개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 99,
+    "createdAt": "2026-09-06",
+    "subCategory": "스니커즈",
+    "discountRate": 15,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 620,
+    "rating": 4.7,
+    "reviewCount": 3210,
+    "image": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "33",
+    "brand": "COVERNAT",
+    "brandId": "covernat",
+    "name": "볼드 아웃솔 캔버스 스니커즈",
+    "category": "shoes",
+    "price": 71200,
+    "originalPrice": 89000,
+    "images": [
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "ivory",
+        "name": "아이보리",
+        "hex": "#fafaf9"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "khaki",
+        "name": "카키",
+        "hex": "#57534e"
+      }
+    ],
+    "sizes": [
+      "250",
+      "260",
+      "265",
+      "270",
+      "275"
+    ],
+    "description": "[신발 · 스니커즈] COVERNAT — 볼드 아웃솔 캔버스 스니커즈. 평점 4.4 (445개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 76,
+    "createdAt": "2026-10-07",
+    "subCategory": "스니커즈",
+    "discountRate": 20,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 210,
+    "rating": 4.4,
+    "reviewCount": 445,
+    "image": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "34",
+    "brand": "ADERERROR",
+    "brandId": "adererror",
+    "name": "커브 솔 로우탑 스니커즈",
+    "category": "shoes",
+    "price": 223200,
+    "originalPrice": 248000,
+    "images": [
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "white",
+        "name": "화이트",
+        "hex": "#fafafa"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "260",
+      "265",
+      "270",
+      "275",
+      "280"
+    ],
+    "description": "[신발 · 스니커즈] ADERERROR — 커브 솔 로우탑 스니커즈. 평점 4.6 (312개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 75,
+    "createdAt": "2026-11-08",
+    "subCategory": "스니커즈",
+    "discountRate": 10,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 120,
+    "rating": 4.6,
+    "reviewCount": 312,
+    "image": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "35",
+    "brand": "MUSINSA STANDARD",
+    "brandId": "musinsa-standard",
+    "name": "캔버스 로우 스니커즈",
+    "category": "shoes",
+    "price": 59000,
+    "images": [
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "white",
+        "name": "화이트",
+        "hex": "#fafafa"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "beige",
+        "name": "베이지",
+        "hex": "#d6d3d1"
+      }
+    ],
+    "sizes": [
+      "250",
+      "260",
+      "270",
+      "280"
+    ],
+    "description": "[신발 · 스니커즈] MUSINSA STANDARD — 캔버스 로우 스니커즈. 평점 4.3 (892개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 98,
+    "createdAt": "2026-12-09",
+    "subCategory": "스니커즈",
+    "discountRate": 0,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 340,
+    "rating": 4.3,
+    "reviewCount": 892,
+    "image": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "36",
+    "brand": "A.P.C.",
+    "brandId": "a-p-c",
+    "name": "스무스 레더 페니 로퍼",
+    "category": "shoes",
+    "price": 333840,
+    "originalPrice": 428000,
+    "images": [
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "brown",
+        "name": "브라운",
+        "hex": "#78350f"
+      }
+    ],
+    "sizes": [
+      "250",
+      "260",
+      "265",
+      "270",
+      "275"
+    ],
+    "description": "[신발 · 로퍼] A.P.C. — 스무스 레더 페니 로퍼. 평점 4.7 (167개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 71,
+    "createdAt": "2026-01-10",
+    "subCategory": "로퍼",
+    "discountRate": 22,
+    "isBest": false,
+    "gender": "male",
+    "stock": 54,
+    "rating": 4.7,
+    "reviewCount": 167,
+    "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "37",
+    "brand": "MUSINSA STANDARD",
+    "brandId": "musinsa-standard",
+    "name": "소프트 그레인 로퍼",
+    "category": "shoes",
+    "price": 113520,
+    "originalPrice": 129000,
+    "images": [
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "chocolate",
+        "name": "초콜릿",
+        "hex": "#431407"
+      },
+      {
+        "id": "burgundy",
+        "name": "버건디",
+        "hex": "#7f1d1d"
+      }
+    ],
+    "sizes": [
+      "250",
+      "260",
+      "265",
+      "270"
+    ],
+    "description": "[신발 · 로퍼] MUSINSA STANDARD — 소프트 그레인 로퍼. 평점 4.5 (389개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 76,
+    "createdAt": "2026-02-11",
+    "subCategory": "로퍼",
+    "discountRate": 12,
+    "isBest": false,
+    "gender": "female",
+    "stock": 176,
+    "rating": 4.5,
+    "reviewCount": 389,
+    "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "38",
+    "brand": "COVERNAT",
+    "brandId": "covernat",
+    "name": "비브람 솔 스웨이드 로퍼",
+    "category": "shoes",
+    "price": 129560,
+    "originalPrice": 158000,
+    "images": [
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "suede-brown",
+        "name": "스웨이드 브라운",
+        "hex": "#78350f"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "260",
+      "265",
+      "270",
+      "275",
+      "280"
+    ],
+    "description": "[신발 · 로퍼] COVERNAT — 비브람 솔 스웨이드 로퍼. 평점 4.6 (278개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 82,
+    "createdAt": "2026-03-12",
+    "subCategory": "로퍼",
+    "discountRate": 18,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 133,
+    "rating": 4.6,
+    "reviewCount": 278,
+    "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "39",
+    "brand": "THISISNEVERTHAT",
+    "brandId": "thisisneverthat",
+    "name": "몰드 솔 레더 로퍼",
+    "category": "shoes",
+    "price": 168300,
+    "originalPrice": 198000,
+    "images": [
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "dark-brown",
+        "name": "다크브라운",
+        "hex": "#451a03"
+      }
+    ],
+    "sizes": [
+      "250",
+      "260",
+      "270",
+      "280"
+    ],
+    "description": "[신발 · 로퍼] THISISNEVERTHAT — 몰드 솔 레더 로퍼. 평점 4.4 (201개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 68,
+    "createdAt": "2026-04-13",
+    "subCategory": "로퍼",
+    "discountRate": 15,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 97,
+    "rating": 4.4,
+    "reviewCount": 201,
+    "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "40",
+    "brand": "NEW BALANCE",
+    "brandId": "new-balance",
+    "name": "클래식 드라이빙 로퍼",
+    "category": "shoes",
+    "price": 78480,
+    "originalPrice": 109000,
+    "images": [
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "brown",
+        "name": "브라운",
+        "hex": "#78350f"
+      }
+    ],
+    "sizes": [
+      "250",
+      "260",
+      "265",
+      "270",
+      "275"
+    ],
+    "description": "[신발 · 로퍼] NEW BALANCE — 클래식 드라이빙 로퍼. 평점 4.5 (612개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 91,
+    "createdAt": "2026-05-14",
+    "subCategory": "로퍼",
+    "discountRate": 28,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 245,
+    "rating": 4.5,
+    "reviewCount": 612,
+    "image": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "41",
+    "brand": "NIKE",
+    "brandId": "nike",
+    "name": "헤리티지 백팩 25L",
+    "category": "bag",
+    "price": 63200,
+    "originalPrice": 79000,
+    "images": [
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80",
+      "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "olive",
+        "name": "올리브",
+        "hex": "#3f3f46"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      }
+    ],
+    "sizes": [
+      "ONE"
+    ],
+    "description": "[가방 · 백팩] NIKE — 헤리티지 백팩 25L. 평점 4.6 (1456개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 99,
+    "createdAt": "2026-06-15",
+    "subCategory": "백팩",
+    "discountRate": 20,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 380,
+    "rating": 4.6,
+    "reviewCount": 1456,
+    "image": "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+  },
+  {
+    "id": "42",
+    "brand": "COVERNAT",
+    "brandId": "covernat",
+    "name": "코듀로이 포켓 데이 백팩",
+    "category": "bag",
+    "price": 106200,
+    "originalPrice": 118000,
+    "images": [
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80",
+      "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "beige",
+        "name": "베이지",
+        "hex": "#d6d3d1"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "brown",
+        "name": "브라운",
+        "hex": "#78350f"
+      }
+    ],
+    "sizes": [
+      "ONE"
+    ],
+    "description": "[가방 · 백팩] COVERNAT — 코듀로이 포켓 데이 백팩. 평점 4.5 (334개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 74,
+    "createdAt": "2026-07-16",
+    "subCategory": "백팩",
+    "discountRate": 10,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 156,
+    "rating": 4.5,
+    "reviewCount": 334,
+    "image": "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+  },
+  {
+    "id": "43",
+    "brand": "MUSINSA STANDARD",
+    "brandId": "musinsa-standard",
+    "name": "미니멀 나일론 백팩",
+    "category": "bag",
+    "price": 63480,
+    "originalPrice": 69000,
+    "images": [
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80",
+      "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      },
+      {
+        "id": "stone",
+        "name": "스톤",
+        "hex": "#a8a29e"
+      }
+    ],
+    "sizes": [
+      "ONE"
+    ],
+    "description": "[가방 · 백팩] MUSINSA STANDARD — 미니멀 나일론 백팩. 평점 4.4 (567개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 89,
+    "createdAt": "2026-08-17",
+    "subCategory": "백팩",
+    "discountRate": 8,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 290,
+    "rating": 4.4,
+    "reviewCount": 567,
+    "image": "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+  },
+  {
+    "id": "44",
+    "brand": "ADERERROR",
+    "brandId": "adererror",
+    "name": "모듈 패널 테크 백팩",
+    "category": "bag",
+    "price": 191840,
+    "originalPrice": 218000,
+    "images": [
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80",
+      "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "silver",
+        "name": "실버",
+        "hex": "#d4d4d8"
+      }
+    ],
+    "sizes": [
+      "ONE"
+    ],
+    "description": "[가방 · 백팩] ADERERROR — 모듈 패널 테크 백팩. 평점 4.7 (189개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 72,
+    "createdAt": "2026-09-18",
+    "subCategory": "백팩",
+    "discountRate": 12,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 72,
+    "rating": 4.7,
+    "reviewCount": 189,
+    "image": "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+  },
+  {
+    "id": "45",
+    "brand": "THISISNEVERTHAT",
+    "brandId": "thisisneverthat",
+    "name": "코드락 스트랩 백팩",
+    "category": "bag",
+    "price": 125800,
+    "originalPrice": 148000,
+    "images": [
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80",
+      "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "khaki",
+        "name": "카키",
+        "hex": "#57534e"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      }
+    ],
+    "sizes": [
+      "ONE"
+    ],
+    "description": "[가방 · 백팩] THISISNEVERTHAT — 코드락 스트랩 백팩. 평점 4.5 (256개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 72,
+    "createdAt": "2026-10-19",
+    "subCategory": "백팩",
+    "discountRate": 15,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 134,
+    "rating": 4.5,
+    "reviewCount": 256,
+    "image": "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+  },
+  {
+    "id": "46",
+    "brand": "A.P.C.",
+    "brandId": "a-p-c",
+    "name": "나일론 미니 크로스백",
+    "category": "bag",
+    "price": 162360,
+    "originalPrice": 198000,
+    "images": [
+      "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      },
+      {
+        "id": "khaki",
+        "name": "카키",
+        "hex": "#57534e"
+      }
+    ],
+    "sizes": [
+      "ONE"
+    ],
+    "description": "[가방 · 크로스백] A.P.C. — 나일론 미니 크로스백. 평점 4.8 (223개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 83,
+    "createdAt": "2026-11-20",
+    "subCategory": "크로스백",
+    "discountRate": 18,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 98,
+    "rating": 4.8,
+    "reviewCount": 223,
+    "image": "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "47",
+    "brand": "MUSINSA STANDARD",
+    "brandId": "musinsa-standard",
+    "name": "컴팩트 슬링 크로스백",
+    "category": "bag",
+    "price": 46550,
+    "originalPrice": 49000,
+    "images": [
+      "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      },
+      {
+        "id": "olive",
+        "name": "올리브",
+        "hex": "#3f3f46"
+      },
+      {
+        "id": "burgundy",
+        "name": "버건디",
+        "hex": "#7f1d1d"
+      }
+    ],
+    "sizes": [
+      "ONE"
+    ],
+    "description": "[가방 · 크로스백] MUSINSA STANDARD — 컴팩트 슬링 크로스백. 평점 4.3 (712개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 84,
+    "createdAt": "2026-12-21",
+    "subCategory": "크로스백",
+    "discountRate": 5,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 410,
+    "rating": 4.3,
+    "reviewCount": 712,
+    "image": "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "48",
+    "brand": "COVERNAT",
+    "brandId": "covernat",
+    "name": "캔버스 메일백 크로스",
+    "category": "bag",
+    "price": 56160,
+    "originalPrice": 72000,
+    "images": [
+      "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "natural",
+        "name": "내추럴",
+        "hex": "#fafaf9"
+      },
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      }
+    ],
+    "sizes": [
+      "ONE"
+    ],
+    "description": "[가방 · 크로스백] COVERNAT — 캔버스 메일백 크로스. 평점 4.5 (401개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 84,
+    "createdAt": "2026-01-22",
+    "subCategory": "크로스백",
+    "discountRate": 22,
+    "isBest": true,
+    "gender": "female",
+    "stock": 187,
+    "rating": 4.5,
+    "reviewCount": 401,
+    "image": "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "49",
+    "brand": "NIKE",
+    "brandId": "nike",
+    "name": "헤리티지 크로스바디 백",
+    "category": "bag",
+    "price": 27300,
+    "originalPrice": 39000,
+    "images": [
+      "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "navy",
+        "name": "네이비",
+        "hex": "#1e3a5f"
+      },
+      {
+        "id": "grey",
+        "name": "그레이",
+        "hex": "#9ca3af"
+      }
+    ],
+    "sizes": [
+      "ONE"
+    ],
+    "description": "[가방 · 크로스백] NIKE — 헤리티지 크로스바디 백. 평점 4.6 (1890개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": false,
+    "popularity": 99,
+    "createdAt": "2026-02-23",
+    "subCategory": "크로스백",
+    "discountRate": 30,
+    "isBest": true,
+    "gender": "unisex",
+    "stock": 520,
+    "rating": 4.6,
+    "reviewCount": 1890,
+    "image": "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82"
+  },
+  {
+    "id": "50",
+    "brand": "ADERERROR",
+    "brandId": "adererror",
+    "name": "지오메트릭 스트랩 크로스백",
+    "category": "bag",
+    "price": 160200,
+    "originalPrice": 178000,
+    "images": [
+      "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82",
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=1000&q=80"
+    ],
+    "colors": [
+      {
+        "id": "black",
+        "name": "블랙",
+        "hex": "#171717"
+      },
+      {
+        "id": "silver",
+        "name": "실버",
+        "hex": "#d4d4d8"
+      },
+      {
+        "id": "white",
+        "name": "화이트",
+        "hex": "#fafafa"
+      }
+    ],
+    "sizes": [
+      "ONE"
+    ],
+    "description": "[가방 · 크로스백] ADERERROR — 지오메트릭 스트랩 크로스백. 평점 4.5 (267개 리뷰, 데모).",
+    "material": "소재 정보는 데모용 텍스트입니다.",
+    "care": "세탁 방법은 라벨을 확인해 주세요.",
+    "shipping": "영업일 기준 2~4일 이내 출고 (데모)",
+    "isNew": true,
+    "popularity": 72,
+    "createdAt": "2026-03-24",
+    "subCategory": "크로스백",
+    "discountRate": 10,
+    "isBest": false,
+    "gender": "unisex",
+    "stock": 101,
+    "rating": 4.5,
+    "reviewCount": 267,
+    "image": "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop&q=82"
+  }
+]

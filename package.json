@@ -1,0 +1,39 @@
+{
+  "name": "shopping-mall",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:server": "npm run start --prefix server",
+    "dev:all": "concurrently -k \"npm run dev:server\" \"npm run dev\"",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "docker:up": "docker compose up --build",
+    "docker:build": "docker compose build",
+    "generate:women-seed": "node scripts/generate-women-seed.mjs",
+    "generate:product-images": "node scripts/generate-product-images.mjs",
+    "generate:image-prompts": "node scripts/generate-product-image-prompts.mjs",
+    "download:product-photos": "node scripts/download-product-photos.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.14.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.4.0",
+    "tailwindcss": "^4.2.2",
+    "vite": "^8.0.4",
+    "concurrently": "^9.1.2"
+  }
+}

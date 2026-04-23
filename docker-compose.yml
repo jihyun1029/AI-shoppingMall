@@ -1,0 +1,30 @@
+# 사용법: 프로젝트 루트에서
+#   docker compose up --build
+# 브라우저: http://localhost:8080  (nginx → 정적 파일 + /api → API)
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/server.Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: "4000"
+      DATABASE_PATH: /data/shop.db
+      JWT_SECRET: ${JWT_SECRET:-docker-dev-change-me}
+      CORS_ORIGIN: http://localhost:8080,http://127.0.0.1:8080
+    volumes:
+      - sqlite_data:/data
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  sqlite_data:

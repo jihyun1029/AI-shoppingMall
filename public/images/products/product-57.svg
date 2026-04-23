@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <defs>
+    <linearGradient id="bg-57-a" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:hsl(33,18%,88%)"/>
+      <stop offset="55%" style="stop-color:hsl(68,12%,78%)"/>
+      <stop offset="100%" style="stop-color:hsl(33,8%,68%)"/>
+    </linearGradient>
+    <filter id="grain-57" x="0" y="0">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch" result="n"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.04 0" in="n" result="g"/>
+      <feBlend in="SourceGraphic" in2="g" mode="multiply"/>
+    </filter>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg-57-a)"/>
+  <rect width="800" height="1000" filter="url(#grain-57)" opacity="0.5"/>
+  <rect x="72" y="96" width="656" height="760" rx="6" fill="rgba(255,255,255,0.14)" stroke="rgba(0,0,0,0.06)"/>
+  
+  <g opacity="0.88" transform="translate(0,0)" fill="none" stroke="#0a0a0a" stroke-width="2.2" stroke-linejoin="round">
+    <path d="M340 320 Q400 300 460 320 L500 400 L480 760 L400 800 L320 760 L300 400 Z" fill="rgba(255,255,255,0.33)"/>
+    <path d="M360 320 L360 280 Q400 260 440 280 L440 320"/>
+  </g>
+  <text x="400" y="900" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#18181b" opacity="0.35">플리츠 맥시 원피스</text>
+  <text x="400" y="928" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" letter-spacing="0.2em" fill="#18181b" opacity="0.28">ACNE STUDIOS</text>
+  <text x="400" y="956" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#18181b" opacity="0.22">#57</text>
+</svg>
