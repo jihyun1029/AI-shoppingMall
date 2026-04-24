@@ -14,7 +14,7 @@ React + Express 기반의 풀스택 쇼핑몰 포트폴리오 프로젝트입니
 | 장바구니 | 수량 조절, 총액 계산 |
 | 주문 | 주문 완료 페이지, 주문 내역 |
 | 회원 | 회원가입 / 로그인 (JWT), 마이페이지 |
-| AI 챗봇 | 플로팅 챗봇 패널, 빠른 질문 버튼 |
+| AI 챗봇 | 플로팅 챗봇 패널, 빠른 질문 버튼, intent 기반 추천(상품/코디/장바구니/날씨), 상품별 추천 이유(reason) |
 | 추천 | 장바구니 기반 연관 상품 추천 |
 | 관리자 | 상품 CRUD (목록·등록·수정), 대시보드 |
 
@@ -117,3 +117,25 @@ cp server/.env.example server/.env
 | `JWT_SECRET` | JWT 서명 키 |
 | `DATABASE_PATH` | SQLite DB 파일 경로 |
 | `CORS_ORIGIN` | 허용할 Origin (쉼표 구분) |
+
+---
+
+## AI 챗봇 질의 예시
+
+- `베이지 슬랙스 추천해줘` → `PRODUCT_RECOMMEND` (상품 필터 + 상품별 reason)
+- `통통한 체형인데 코디 추천해줘` → `COORDINATION_RECOMMEND` (체형 보완 코디 설명)
+- `23도의 날씨인데 추천룩은?` → `WEATHER_COORDINATION` (기온대별 코디/상품 추천)
+- `장바구니에 담은 옷에 어울리는 코디 추천` → `CART_RECOMMEND`
+
+---
+
+## Docker 트러블슈팅
+
+- 코드 수정 후 반영이 안 보이면: `docker compose up --build`
+- BuildKit snapshot 에러(`parent snapshot ... does not exist`)가 나면:
+
+```bash
+docker builder prune -af
+docker compose build --no-cache
+docker compose up
+```
