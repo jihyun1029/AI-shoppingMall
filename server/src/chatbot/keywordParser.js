@@ -28,6 +28,17 @@ const STYLE_PATTERNS = [
   { key: 'feminine', re: /페미닌|여성스럽|우아|로맨틱/ },
 ]
 
+const BODY_TYPE_PATTERNS = [
+  { key: '상체통통', re: /상체\s*통통|팔뚝\s*통통|상체\s*커버/ },
+  { key: '하체통통', re: /하체\s*통통|허벅지\s*통통|종아리\s*통통|하체\s*커버/ },
+  { key: '어깨넓은', re: /어깨\s*넓은|어깨가\s*넓/ },
+  { key: '골반넓은', re: /골반\s*넓은|힙\s*넓은/ },
+  { key: '통통', re: /통통|통통한|체형\s*커버|커버\s*핏|하체\s*커버|상체\s*커버/ },
+  { key: '마른', re: /마른|마른\s*체형|왜소|말랐/ },
+  { key: '키작은', re: /키\s*작은|작은\s*키|아담/ },
+  { key: '키큰', re: /키\s*큰|큰\s*키|장신/ },
+]
+
 function norm(s) {
   return String(s || '')
     .toLowerCase()
@@ -156,6 +167,15 @@ function parsePriceRangeFromText(text) {
   return out
 }
 
+function parseTemperatureFromText(text) {
+  const n = norm(text)
+  const m1 = n.match(/(?:^|\s)(-?\d{1,2})\s*도(?:\s|$|에|엔|면|의|인)/)
+  if (m1) return Number(m1[1])
+  const m2 = n.match(/(?:기온|온도)\s*(-?\d{1,2})/)
+  if (m2) return Number(m2[1])
+  return null
+}
+
 /**
  * @param {string} message
  * @returns {{
@@ -174,12 +194,17 @@ function parsePriceRangeFromText(text) {
  *   cartAssist: boolean;
  *   rawTokens: string[];
  *   strictSubCategory: string | null;
+ *   bodyType: '통통'|'마른'|'키작은'|'키큰'|'상체통통'|'하체통통'|'어깨넓은'|'골반넓은'|null;
+ *   temperature: number | null;
+ *   weatherQuery: boolean;
  * }}
  */
 export function parseRagKeywords(message) {
   const q = parseChatQuery(message)
   const n = norm(message)
   const { minPrice, maxPrice, minOp, maxOp } = parsePriceRangeFromText(message)
+  const temperature = parseTemperatureFromText(message)
+  const weatherQuery = /날씨|기온|온도|오늘\s*날씨/.test(n) || temperature != null
 
   const subCategories = [...q.subCategories]
   for (const sub of EXTRA_SUBCATEGORY_KEYWORDS) {
@@ -197,6 +222,14 @@ export function parseRagKeywords(message) {
   }
   if (!styleKeyword && q.situation) {
     styleKeyword = q.situation === 'office' ? 'office' : q.situation === 'daily' ? 'daily' : 'casual'
+  }
+
+  let bodyType = null
+  for (const { key, re } of BODY_TYPE_PATTERNS) {
+    if (re.test(n)) {
+      bodyType = key
+      break
+    }
   }
 
   const categories = [...q.categories]
@@ -236,6 +269,9 @@ export function parseRagKeywords(message) {
     cartAssist: q.cartAssist,
     rawTokens: q.rawTokens,
     strictSubCategory,
+    bodyType,
+    temperature,
+    weatherQuery,
   }
 }
 
@@ -252,9 +288,10 @@ const CATEGORY_LABEL = {
 /**
  * Agent 응답용 구조화 키워드 (Intent 분류 후 설명·로그용).
  * @param {string} message
+ * @param {ReturnType<typeof parseRagKeywords>} [parsed] 이미 파싱한 결과가 있으면 재사용
  */
-export function buildAgentKeywords(message) {
-  const f = parseRagKeywords(message)
+export function buildAgentKeywords(message, parsed = null) {
+  const f = parsed ?? parseRagKeywords(message)
   const mainCat = f.categories?.[0]
   const mainSub = f.subCategories?.[0]
   const category =
@@ -275,7 +312,33 @@ export function buildAgentKeywords(message) {
     colorTokens: f.colors,
     colorLabel: f.colorLabel,
     styleKeyword: f.styleKeyword,
+    bodyType: f.bodyType,
+    temperature: f.temperature,
+    weatherQuery: f.weatherQuery,
     popular: f.popular,
+  }
+}
+
+export function preferredSubCategoriesForBodyType(bodyType) {
+  switch (bodyType) {
+    case '상체통통':
+      return ['셔츠', '블라우스', '니트', '가디건', '슬랙스']
+    case '하체통통':
+      return ['슬랙스', '와이드 팬츠', '데님', '롱 원피스']
+    case '어깨넓은':
+      return ['블라우스', '셔츠', '가디건', '스커트']
+    case '골반넓은':
+      return ['슬랙스', '와이드 팬츠', '롱 원피스', '코트']
+    case '통통':
+      return ['슬랙스', '데님', '블라우스', '셔츠', '니트', '가디건']
+    case '마른':
+      return ['니트', '가디건', '셔츠', '스커트', '데님']
+    case '키작은':
+      return ['미니 원피스', '스커트', '슬랙스', '힐', '로퍼']
+    case '키큰':
+      return ['롱 원피스', '와이드 팬츠', '슬랙스', '코트']
+    default:
+      return []
   }
 }
 

@@ -6,6 +6,17 @@ import { ChatMessage } from './ChatMessage.jsx'
 import { ChatInput } from './ChatInput.jsx'
 import { QuickQuestionList } from './QuickQuestionList.jsx'
 import { TypingIndicator } from './TypingIndicator.jsx'
+import { attachLocalReasons } from '../../utils/chatbotPickReasons.js'
+
+/** 직전 사용자 메시지 (userQuery 필드 없는 예전 세션 대비) */
+function lastUserContentBefore(messages, assistantIndex) {
+  for (let i = assistantIndex - 1; i >= 0; i--) {
+    if (messages[i]?.role === 'user' && typeof messages[i].content === 'string') {
+      return messages[i].content
+    }
+  }
+  return ''
+}
 
 export function ChatbotPanel() {
   const {
@@ -23,7 +34,10 @@ export function ChatbotPanel() {
   const scrollRef = useRef(null)
   const [draft, setDraft] = useState('')
   const hasMessages = messages.length > 0
-  const previewProducts = useMemo(() => products.slice(0, 3), [products])
+  const previewProducts = useMemo(
+    () => attachLocalReasons(products.slice(0, 3), '인기 상품을 둘러보고 있어요'),
+    [products],
+  )
 
   const handleSend = (text) => {
     sendUserMessage(text)
@@ -79,11 +93,29 @@ export function ChatbotPanel() {
           {!hasMessages ? (
             <ChatMessage role="assistant" content={CHATBOT_WELCOME_MESSAGE} products={previewProducts} onAdded={() => showToast('장바구니에 담았어요.')} />
           ) : null}
-          {messages.map((m) => {
+          {messages.map((m, msgIndex) => {
+            const storedQ = typeof m.userQuery === 'string' ? m.userQuery.trim() : ''
+            const userQ =
+              m.role === 'assistant'
+                ? storedQ || lastUserContentBefore(messages, msgIndex)
+                : ''
             const resolved =
-              m.role === 'assistant' && m.productIds?.length
-                ? m.productIds.map((id) => productById.get(String(id))).filter(Boolean)
-                : []
+              m.role === 'assistant' && Array.isArray(m.recommendedProducts) && m.recommendedProducts.length
+                ? attachLocalReasons(
+                    m.recommendedProducts
+                      .map((api) => {
+                        const full = productById.get(String(api.id))
+                        return full ? { ...full, ...api } : api
+                      })
+                      .filter(Boolean),
+                    userQ,
+                  )
+                : m.role === 'assistant' && m.productIds?.length
+                  ? attachLocalReasons(
+                      m.productIds.map((id) => productById.get(String(id))).filter(Boolean),
+                      userQ,
+                    )
+                  : []
             return (
               <ChatMessage
                 key={m.id}

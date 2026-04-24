@@ -7,11 +7,12 @@ function norm(s) {
     .trim()
 }
 
-/** @typedef {'PRODUCT_RECOMMEND'|'COORDINATION_RECOMMEND'|'CART_RECOMMEND'|'GENERAL_INFO'} ChatIntent */
+/** @typedef {'PRODUCT_RECOMMEND'|'COORDINATION_RECOMMEND'|'WEATHER_COORDINATION'|'CART_RECOMMEND'|'GENERAL_INFO'} ChatIntent */
 
 export const INTENT = {
   PRODUCT_RECOMMEND: 'PRODUCT_RECOMMEND',
   COORDINATION_RECOMMEND: 'COORDINATION_RECOMMEND',
+  WEATHER_COORDINATION: 'WEATHER_COORDINATION',
   CART_RECOMMEND: 'CART_RECOMMEND',
   GENERAL_INFO: 'GENERAL_INFO',
 }
@@ -29,6 +30,7 @@ export function classifyIntent(message) {
   /** @type {Record<string, number>} */
   const scores = {
     [INTENT.CART_RECOMMEND]: 0,
+    [INTENT.WEATHER_COORDINATION]: 0,
     [INTENT.COORDINATION_RECOMMEND]: 0,
     [INTENT.GENERAL_INFO]: 0,
     [INTENT.PRODUCT_RECOMMEND]: 0,
@@ -36,6 +38,16 @@ export function classifyIntent(message) {
 
   if (q.cartAssist || /장바구니|담은\s*옷|카트에|내가\s*담|담아\s*둔/.test(n)) {
     scores[INTENT.CART_RECOMMEND] += 100
+  }
+
+  const hasTemp = /(?:^|\s)-?\d{1,2}\s*도(?:\s|$|에|엔|면|의|인)|기온\s*-?\d{1,2}|온도\s*-?\d{1,2}/.test(n)
+  const hasWeatherWord = /날씨|기온|온도|오늘\s*날씨/.test(n)
+  if (
+    (hasTemp && hasWeatherWord) ||
+    (hasTemp && /(코디|추천|룩|입기|뭐\s*입|스타일)/.test(n)) ||
+    (hasWeatherWord && /(코디|추천|룩|입기|뭐\s*입|스타일)/.test(n))
+  ) {
+    scores[INTENT.WEATHER_COORDINATION] += 95
   }
 
   if (
@@ -63,6 +75,7 @@ export function classifyIntent(message) {
 
   const tieBreak = [
     INTENT.CART_RECOMMEND,
+    INTENT.WEATHER_COORDINATION,
     INTENT.COORDINATION_RECOMMEND,
     INTENT.GENERAL_INFO,
     INTENT.PRODUCT_RECOMMEND,

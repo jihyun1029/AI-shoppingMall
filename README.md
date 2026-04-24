@@ -48,6 +48,12 @@ docker compose up --build
 
 브라우저에서 http://localhost:8080 접속
 
+**Docker에서 챗봇·API가 안 될 때**
+
+- 프론트는 **같은 주소의** `/api/...`(상대 경로)로 호출합니다. `web` 이미지 빌드 시 `VITE_API_URL`을 비워 두므로, 브라우저는 `http://(접속한 호스트):8080/api/...` → Nginx → `api:4000` 으로 전달됩니다.
+- **절대** 빌드에 `VITE_API_URL=http://localhost:4000` 처럼 넣지 마세요. 다른 PC나 `http://192.168.x.x:8080`으로 접속하면 브라우저의 `localhost`는 그 PC 자신을 가리켜 API가 열리지 않습니다.
+- LAN IP로 접속하면서 API를 **직접** `:4000`에 붙이는 설정을 쓰는 경우에만, `api` 서비스의 `CORS_ORIGIN`에 해당 Origin을 추가하세요. (`docker-compose.yml` 주석 참고)
+
 ### 로컬 개발 서버
 
 ```bash

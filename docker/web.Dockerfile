@@ -9,6 +9,11 @@ COPY index.html vite.config.js eslint.config.js ./
 COPY public ./public
 COPY src ./src
 
+# Docker: 브라우저는 항상 Nginx(예: :8080)와 동일 출처 → 상대 경로 `/api` 사용 (nginx → api:4000)
+# 절대 URL로 localhost:4000을 넣으면 LAN/IP 접속 시 챗봇·API가 동작하지 않습니다.
+ARG VITE_API_URL=
+ENV VITE_API_URL=$VITE_API_URL
+
 RUN npm run build
 
 FROM nginx:1.27-alpine

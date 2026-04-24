@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formatPrice } from '../../utils/format'
 import { useCart } from '../../hooks/useCart'
@@ -10,6 +11,29 @@ export function RecommendedProductCard({ product, onAdded }) {
   const firstColor = product.colors?.[0]
   const firstSize = product.sizes?.[0]
   const discountRate = Number(product.discountRate) || 0
+  const reasonText =
+    typeof product.reason === 'string' && product.reason.trim()
+      ? product.reason.trim()
+      : typeof product.recommendReason === 'string' && product.recommendReason.trim()
+        ? product.recommendReason.trim()
+        : ''
+  const [expanded, setExpanded] = useState(false)
+  const [showMore, setShowMore] = useState(false)
+  const reasonRef = useRef(null)
+
+  useEffect(() => {
+    const el = reasonRef.current
+    if (!el || !reasonText) {
+      setShowMore(false)
+      return
+    }
+    const checkOverflow = () => {
+      setShowMore(el.scrollHeight > el.clientHeight + 1)
+    }
+    checkOverflow()
+    window.addEventListener('resize', checkOverflow)
+    return () => window.removeEventListener('resize', checkOverflow)
+  }, [reasonText, expanded])
 
   const handleCart = () => {
     if (!firstColor || !firstSize) return
@@ -24,7 +48,7 @@ export function RecommendedProductCard({ product, onAdded }) {
   }
 
   return (
-    <article className="w-[190px] shrink-0 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
+    <article className="flex h-[520px] w-[190px] shrink-0 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
       <Link to={`/products/${product.id}`} className="block aspect-square w-full overflow-hidden rounded-t-xl bg-zinc-100">
         <ProductImage
           product={product}
@@ -34,7 +58,7 @@ export function RecommendedProductCard({ product, onAdded }) {
           loading="lazy"
         />
       </Link>
-      <div className="space-y-1.5 p-2.5">
+      <div className="flex min-h-0 flex-1 flex-col gap-1.5 p-2.5">
         <p className="text-[10px] font-semibold uppercase tracking-wide text-zinc-500">{product.brand}</p>
         <Link to={`/products/${product.id}`} className="line-clamp-2 min-h-[2.25rem] text-[11px] font-medium leading-snug text-zinc-900 hover:underline">
           {product.name}
@@ -45,7 +69,28 @@ export function RecommendedProductCard({ product, onAdded }) {
             <span className="text-[10px] font-semibold text-red-500">{discountRate}%</span>
           ) : null}
         </div>
-        <div className="flex flex-col gap-1">
+        {reasonText ? (
+          <div className="flex h-[170px] flex-col rounded-md bg-zinc-50 px-2 py-1.5">
+            <p className="text-[10px] font-semibold text-zinc-500">추천 이유</p>
+            <p
+              ref={reasonRef}
+              className={`product-reason whitespace-pre-line ${expanded ? 'product-reason--expanded' : 'product-reason--clamped'}`}
+              title={reasonText}
+            >
+              {reasonText}
+            </p>
+            {showMore ? (
+              <button
+                type="button"
+                className="mt-1 text-[10px] font-semibold text-zinc-500 underline underline-offset-2 hover:text-zinc-700"
+                onClick={() => setExpanded((v) => !v)}
+              >
+                {expanded ? '접기' : '더보기'}
+              </button>
+            ) : null}
+          </div>
+        ) : null}
+        <div className="mt-auto flex flex-col gap-1">
           <Link
             to={`/products/${product.id}`}
             className="rounded-lg border border-zinc-200 py-1.5 text-center text-[10px] font-medium text-zinc-700 hover:bg-zinc-50"

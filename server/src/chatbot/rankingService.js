@@ -54,6 +54,28 @@ export function scoreCandidate(row, f) {
     if (t.length < 2) continue
     if (st.includes(t.toLowerCase())) score += 0.8
   }
+
+  if (f.bodyType === '상체통통') {
+    if (/루즈|오버핏|셔츠|블라우스|가디건/.test(st)) score += 2.3
+    if (/브이넥|v넥|드롭/.test(st)) score += 1.1
+  } else if (f.bodyType === '하체통통') {
+    if (/와이드|세미\s*와이드|스트레이트|슬랙스|롱/.test(st)) score += 2.3
+    if (/다크|블랙|네이비|차콜/.test(st)) score += 0.8
+  } else if (f.bodyType === '어깨넓은') {
+    if (/브이넥|v넥|드롭|루즈|가디건/.test(st)) score += 2.0
+  } else if (f.bodyType === '골반넓은') {
+    if (/와이드|세미\s*와이드|롱|슬랙스|코트/.test(st)) score += 2.0
+  } else if (f.bodyType === '통통') {
+    if (/와이드|세미\s*와이드|루즈|여유핏/.test(st)) score += 2.2
+    if (/블랙|네이비|차콜|다크/.test(st)) score += 1.1
+  } else if (f.bodyType === '마른') {
+    if (/슬림|슬림핏|레이어드|가디건|니트/.test(st)) score += 2.0
+  } else if (f.bodyType === '키작은') {
+    if (/하이웨스트|크롭|미니|숏/.test(st)) score += 1.8
+  } else if (f.bodyType === '키큰') {
+    if (/롱|와이드|맥시|코트/.test(st)) score += 1.8
+  }
+
   return Math.round(score * 10) / 10
 }
 

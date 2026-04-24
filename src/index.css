@@ -20,3 +20,36 @@ body {
 #root {
   min-height: 100dvh;
 }
+
+/* 챗봇 추천 상품 카드 — 추천 이유(최대 3줄 고정) */
+.product-reason {
+  margin-top: 8px;
+  width: 100%;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #666;
+  display: block;
+  min-height: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.product-reason--clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  min-height: calc(1.5em * 3);
+  max-height: calc(1.5em * 3);
+  text-overflow: ellipsis;
+}
+
+.product-reason--expanded {
+  display: block;
+  min-height: calc(1.5em * 3);
+  max-height: calc(1.5em * 4.6);
+  overflow-y: auto;
+  padding-right: 2px;
+}

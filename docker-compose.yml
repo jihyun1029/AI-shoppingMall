@@ -1,6 +1,10 @@
 # 사용법: 프로젝트 루트에서
 #   docker compose up --build
 # 브라우저: http://localhost:8080  (nginx → 정적 파일 + /api → API)
+#
+# 챗봇·상품 API: 프론트는 /api/chatbot 등 "상대 경로"로 호출합니다. LAN IP로 접속할 때는
+#   CORS_ORIGIN에 http://<본인IP>:8080 을 추가하세요. 예:
+#   CORS_ORIGIN=http://localhost:8080,http://192.168.0.10:8080 docker compose up --build
 
 services:
   api:
@@ -13,18 +17,33 @@ services:
       PORT: "4000"
       DATABASE_PATH: /data/shop.db
       JWT_SECRET: ${JWT_SECRET:-docker-dev-change-me}
-      CORS_ORIGIN: http://localhost:8080,http://127.0.0.1:8080
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080,http://127.0.0.1:8080}
     volumes:
       - sqlite_data:/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://127.0.0.1:4000/api/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
 
   web:
     build:
       context: .
       dockerfile: docker/web.Dockerfile
+      args:
+        VITE_API_URL: ""
     ports:
       - "8080:80"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
 
 volumes:
   sqlite_data:

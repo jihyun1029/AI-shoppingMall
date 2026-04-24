@@ -9,18 +9,10 @@ import {
 import { filterByHardConstraints, rerank } from './rankingService.js'
 import { validateCandidates } from './validationService.js'
 import { rowToApiProduct } from '../productRowMapper.js'
+import { generateOverallReplyIntro } from './recommendReasonService.js'
 
 const TOP_K = 12
 const FINAL_N = 5
-
-function productFocusIntro(f) {
-  const cw = f.colorLabel || f.color
-  const sub = f.strictSubCategory
-  if (sub && cw) return `${cw} 컬러의 ${sub} 상품을 추천해드릴게요.`
-  if (sub) return `${sub} 상품을 추천해드릴게요.`
-  if (cw) return `${cw} 톤에 맞춘 상품을 추천해드릴게요.`
-  return null
-}
 
 /**
  * @param {object[]} products
@@ -57,59 +49,11 @@ function generateAdvancedReply(products, f, meta) {
   }
 
   if (meta.usedFallback) {
-    return '말씀하신 조건에서 후보가 적어, 조건을 일부 완화해 인기 상품 위주로 추천드렸어요. 서브카테고리·색상이 달라질 수 있어요 😊'
+    const n = products.length
+    return `조건에 맞는 후보가 적어, 인기·평점 순으로 ${n}건을 넓혀서 골랐어요. 말씀하신 서브카테고리·색과 다를 수 있으니 상품 설명을 함께 확인해 주세요 😊`
   }
 
-  const intro = productFocusIntro(f)
-
-  const styleLine = (() => {
-    if (f.strictSubCategory || f.colors?.length) {
-      return '실루엣과 소재를 함께 보시면 코디하기 좋아요.'
-    }
-    switch (f.styleKeyword) {
-      case 'office':
-        return '출근룩에는 깔끔한 블라우스와 슬랙스 조합이 잘 어울려요.'
-      case 'daily':
-        return '데일리룩은 편하지만 정돈된 실루엣이 포인트예요.'
-      case 'date':
-        return '데이트에는 분위기 있게 라인이 살아 보이는 아이템이 좋아요.'
-      case 'feminine':
-        return '페미닌 무드는 소재 광택과 컬러 톤으로 은은하게 살리면 좋아요.'
-      case 'casual':
-        return '캐주얼은 데님·스니커즈 매치가 자연스럽고 활동성도 좋아요.'
-      default:
-        return '요청하신 조건에 맞춰 어울리는 상품을 골라봤어요.'
-    }
-  })()
-
-  const first = products[0]
-  const firstLabel = `${first.brand} ${first.name}`
-  const colorPhrase = f.colorLabel || f.color || (f.colors?.length ? f.colors[0] : '')
-  const reason =
-    f.colors?.length > 0
-      ? `${firstLabel}는 말씀하신 ${colorPhrase} 톤과 잘 어울려요.`
-      : `${firstLabel}는 지금 조건에서 활용도가 특히 좋아요.`
-
-  const priceHintParts = []
-  if (f.minPrice != null) priceHintParts.push(`${Math.round(f.minPrice / 10000)}만 원 ${minLabel}`)
-  if (f.maxPrice != null) priceHintParts.push(`${Math.round(f.maxPrice / 10000)}만 원 ${maxLabel}`)
-  const priceHint = priceHintParts.length ? ` 가격은 ${priceHintParts.join(' · ')} 조건을 반영했어요.` : ''
-  const categoryHint =
-    f.categories?.[0] === 'bag' && !intro
-      ? '가방을 찾고 계시군요. 조건에 맞는 가방 상품을 추천해드릴게요.'
-      : ''
-
-  const others = products
-    .slice(1, 4)
-    .map((p) => `${p.brand} ${p.name}`)
-    .join(', ')
-  const more = others ? ` 추가로 ${others}도 함께 보면 좋아요.` : ''
-
-  const tail = `${priceHint} ${reason}${more} 29CM / W컨셉 무드로 미니멀하게 코디해 보세요 😊`
-  if (intro) {
-    return `${intro} ${styleLine}${tail}`.replace(/\s{2,}/g, ' ').trim()
-  }
-  return `${categoryHint} ${styleLine}${tail}`.replace(/\s{2,}/g, ' ').trim()
+  return generateOverallReplyIntro(products, f)
 }
 
 /**

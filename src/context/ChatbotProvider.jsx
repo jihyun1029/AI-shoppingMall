@@ -39,6 +39,8 @@ function loadStored() {
         createdAt: Number(m.createdAt) || Date.now(),
         ...(typeof m.intent === 'string' ? { intent: m.intent } : {}),
         ...(m.keywords && typeof m.keywords === 'object' ? { keywords: m.keywords } : {}),
+        ...(Array.isArray(m.recommendedProducts) ? { recommendedProducts: m.recommendedProducts } : {}),
+        ...(typeof m.userQuery === 'string' ? { userQuery: m.userQuery } : {}),
       }))
   } catch {
     return null
@@ -58,6 +60,8 @@ function saveStored(messages) {
           createdAt: m.createdAt,
           ...(m.intent ? { intent: m.intent } : {}),
           ...(m.keywords ? { keywords: m.keywords } : {}),
+          ...(m.recommendedProducts ? { recommendedProducts: m.recommendedProducts } : {}),
+          ...(typeof m.userQuery === 'string' ? { userQuery: m.userQuery } : {}),
         })),
       ),
     )
@@ -123,9 +127,11 @@ export function ChatbotProvider({ children }) {
             role: 'assistant',
             content: reply,
             productIds: ids,
+            userQuery: trimmed,
             createdAt: Date.now(),
             ...(intent ? { intent } : {}),
             ...(keywords ? { keywords } : {}),
+            ...(picks.length ? { recommendedProducts: picks } : {}),
           },
         ])
       } catch {

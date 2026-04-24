@@ -1,7 +1,8 @@
 import { classifyIntent, INTENT } from './intentClassifier.js'
-import { buildAgentKeywords } from './keywordParser.js'
+import { buildAgentKeywords, parseRagKeywords } from './keywordParser.js'
+import { assignRecommendReasons } from './recommendReasonService.js'
 import { runProductRecommend } from './productService.js'
-import { runCoordinationRecommend } from './coordinationService.js'
+import { runCoordinationRecommend, runWeatherCoordinationRecommend } from './coordinationService.js'
 import { runCartRecommend } from './cartService.js'
 import { answerGeneralInfo } from './generalInfoService.js'
 
@@ -25,55 +26,62 @@ export function postChatbot(db, req, res) {
     : undefined
 
   const { intent } = classifyIntent(message)
-  const keywords = buildAgentKeywords(message)
+  const parsedKeywords = parseRagKeywords(message)
+  const keywords = buildAgentKeywords(message, parsedKeywords)
 
   try {
     let text = ''
-    let products = []
+    let productsRaw = []
 
     switch (intent) {
       case INTENT.CART_RECOMMEND: {
         const out = runCartRecommend(db, message, cartProductIds || [])
         text = out.text
-        products = out.products
+        productsRaw = out.products
         break
       }
       case INTENT.COORDINATION_RECOMMEND: {
         const out = runCoordinationRecommend(db, message)
         text = out.text
-        products = out.products
+        productsRaw = out.products
+        break
+      }
+      case INTENT.WEATHER_COORDINATION: {
+        const out = runWeatherCoordinationRecommend(db, message)
+        text = out.text
+        productsRaw = out.products
         break
       }
       case INTENT.GENERAL_INFO: {
         const { text: t } = answerGeneralInfo(message)
         text = t
-        products = []
+        productsRaw = []
         break
       }
       case INTENT.PRODUCT_RECOMMEND:
       default: {
         const out = runProductRecommend(db, message, { cartProductIds })
         text = out.text
-        products = out.products
+        productsRaw = out.products
         break
       }
     }
 
-    console.log('[chatbot]', {
-      intent,
-      parsedKeywords: keywords,
-      filteredProducts: products.map((p) => ({
-        id: p.id,
-        category: p.category,
-        subCategory: p.subCategory,
-      })),
-    })
+    const productsWithReason = productsRaw.length
+      ? assignRecommendReasons(productsRaw, parsedKeywords, message)
+      : []
+
+    console.log('parsedKeywords:', parsedKeywords)
+    console.log(
+      'productsWithReason:',
+      productsWithReason.map((p) => ({ id: p.id, name: p.name, reason: p.reason })),
+    )
 
     res.json({
       intent,
       keywords,
       text,
-      products,
+      products: productsWithReason,
     })
   } catch (e) {
     console.error(e)
