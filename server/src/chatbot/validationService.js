@@ -40,6 +40,10 @@ export function validateCandidates(db, rows, f, opts = {}) {
       dropped.push(`color-${id}`)
       continue
     }
+    if (f.strictSubCategory && String(fresh.subCategory) !== String(f.strictSubCategory)) {
+      dropped.push(`sub-${id}`)
+      continue
+    }
     out.push(fresh)
   }
 

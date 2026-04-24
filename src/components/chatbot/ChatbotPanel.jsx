@@ -90,6 +90,7 @@ export function ChatbotPanel() {
                 role={m.role}
                 content={m.content}
                 products={resolved}
+                intent={m.intent}
                 onAdded={() => showToast('첫 번째 옵션으로 장바구니에 담았어요.')}
               />
             )

@@ -65,6 +65,13 @@ export function appendColorWhere(parts, vals, f) {
   }
 }
 
+/** 서브카테고리 정확 일치 (슬랙스·스커트·데님 등 명시 시 필수) */
+export function appendStrictSubcategoryWhere(parts, vals, f) {
+  if (!f.strictSubCategory) return
+  parts.push('subCategory = ?')
+  vals.push(f.strictSubCategory)
+}
+
 function orderClauseStructured(f, pref) {
   const parts = []
   const extraVals = []
@@ -92,7 +99,9 @@ export function keywordStructuredSearch(db, f) {
     vals.push(...f.categories)
   }
 
-  if (f.subCategories?.length) {
+  if (f.strictSubCategory) {
+    appendStrictSubcategoryWhere(where, vals, f)
+  } else if (f.subCategories?.length) {
     const ors = f.subCategories.map(() => '(subCategory = ? OR name LIKE ? OR description LIKE ?)')
     for (const sub of f.subCategories) {
       vals.push(sub, `%${sub}%`, `%${sub}%`)
@@ -131,6 +140,7 @@ export function keywordStructuredSearch(db, f) {
  * (2) 스타일 확장 키워드로 search blob LIKE (의미 기반 간이 확장)
  */
 export function semanticExpandedSearch(db, f) {
+  if (f.strictSubCategory) return []
   const terms = semanticExpansionTerms(f.styleKeyword)
   if (!terms.length) return []
 
@@ -152,6 +162,7 @@ export function semanticExpandedSearch(db, f) {
     vals.push(...f.categories)
   }
 
+  appendStrictSubcategoryWhere(where, vals, f)
   appendColorWhere(where, vals, f)
 
   const sql = `
@@ -193,6 +204,7 @@ export function searchRelaxedBlob(db, f) {
     where.push(`category IN (${f.categories.map(() => '?').join(',')})`)
     vals.push(...f.categories)
   }
+  appendStrictSubcategoryWhere(where, vals, f)
   appendColorWhere(where, vals, f)
   const sql = `
     SELECT *, ${blob} AS _search_blob
@@ -235,6 +247,7 @@ export function searchConstrainedFallback(db, f) {
     where.push('salePrice >= ?')
     vals.push(f.minPrice)
   }
+  appendStrictSubcategoryWhere(where, vals, f)
   appendColorWhere(where, vals, f)
   const sql = `
     SELECT *, ${blob} AS _search_blob
@@ -258,6 +271,7 @@ export function searchByCartContext(db, ids, f = null) {
   const cph = cats.map(() => '?').join(',')
   const where = [`stock > 0`, `category IN (${cph})`, `id NOT IN (${ph})`]
   const vals = [...cats, ...nums]
+  appendStrictSubcategoryWhere(where, vals, f || {})
   appendColorWhere(where, vals, f || {})
   const sql = `
     SELECT *, ${blob} AS _search_blob
@@ -274,7 +288,7 @@ export function searchByCartContext(db, ids, f = null) {
  */
 export function hybridSearch(db, f) {
   const a = keywordStructuredSearch(db, f)
-  const b = semanticExpandedSearch(db, f)
+  const b = f.strictSubCategory ? [] : semanticExpandedSearch(db, f)
   let merged = mergeById(a, b)
   if (merged.length < 6) {
     const c = searchRelaxedBlob(db, f)

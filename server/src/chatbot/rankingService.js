@@ -14,6 +14,7 @@ function satisfiesHardConstraints(row, f) {
   if (f.maxPrice != null && !Number.isNaN(f.maxPrice) && salePrice > f.maxPrice) return false
   if (f.minPrice != null && !Number.isNaN(f.minPrice) && salePrice < f.minPrice) return false
   if (f.colors?.length && !productMatchesColorTokens(r.colors, f.colors)) return false
+  if (f.strictSubCategory && String(r.subCategory) !== String(f.strictSubCategory)) return false
   return true
 }
 
@@ -29,17 +30,9 @@ export function scoreCandidate(row, f) {
   const r = stripMeta(row)
   let score = 0
   const cat = String(r.category || '')
-  const sub = String(r.subCategory || '')
   const st = buildSearchTextFromRow(r).toLowerCase()
 
   if (f.categories?.length && f.categories.includes(cat)) score += 5
-
-  if (f.subCategories?.length) {
-    const hit = f.subCategories.some(
-      (s) => sub === s || String(r.name || '').includes(s) || st.includes(s.toLowerCase()),
-    )
-    if (hit) score += 5
-  }
 
   if (f.maxPrice != null && !Number.isNaN(f.maxPrice)) {
     const sp = Number(r.salePrice)

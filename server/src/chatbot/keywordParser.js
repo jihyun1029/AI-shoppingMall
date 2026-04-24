@@ -75,6 +75,35 @@ function canonicalColorKey(colorNames) {
 }
 
 const BAG_ALIASES = ['가방', '백', 'bag', '토트백', '숄더백', '크로스백']
+
+/** DB `subCategory`와 정확히 일치해야 하는 하의 키워드 (넓은 name LIKE 검색 제외) */
+const STRICT_BOTTOM_SUB_PATTERNS = [
+  { sub: '슬랙스', words: ['슬랙스'] },
+  { sub: '스커트', words: ['스커트'] },
+  { sub: '데님', words: ['데님', '청바지'] },
+  { sub: '반바지', words: ['반바지'] },
+]
+
+/**
+ * 메시지에 특정 하의 서브카테고리가 명시된 경우에만 반환. "하의"만 있으면 null.
+ * @param {string} n norm(message)
+ * @returns {string | null}
+ */
+export function resolveStrictBottomSubCategory(n) {
+  let best = null
+  let bestLen = 0
+  for (const { sub, words } of STRICT_BOTTOM_SUB_PATTERNS) {
+    for (const w of words) {
+      const lw = w.toLowerCase()
+      if (n.includes(lw) && lw.length >= bestLen) {
+        bestLen = lw.length
+        best = sub
+      }
+    }
+  }
+  return best
+}
+
 const MIN_PRICE_WORDS = ['이상', '초과', '넘는', '부터']
 const MAX_PRICE_WORDS = ['이하', '미만', '안으로', '안에서', '까지']
 
@@ -144,6 +173,7 @@ function parsePriceRangeFromText(text) {
  *   popular: boolean;
  *   cartAssist: boolean;
  *   rawTokens: string[];
+ *   strictSubCategory: string | null;
  * }}
  */
 export function parseRagKeywords(message) {
@@ -176,6 +206,16 @@ export function parseRagKeywords(message) {
     categories.push('bag')
   }
 
+  /** 하의 서브를 문장에 명시한 경우 DB subCategory 정확 일치 필수 */
+  let strictSubCategory = null
+  const strictBottom = resolveStrictBottomSubCategory(n)
+  if (strictBottom && !categories.includes('bag')) {
+    if (!categories.includes('bottom')) categories.push('bottom')
+    subCategories.length = 0
+    subCategories.push(strictBottom)
+    strictSubCategory = strictBottom
+  }
+
   const colors = [...new Set(q.colorNames)]
   const colorLabel = colors.length ? pickColorLabelFromMessage(message) : null
   const color = colors.length ? canonicalColorKey(colors) : null
@@ -195,6 +235,47 @@ export function parseRagKeywords(message) {
     popular: q.popular,
     cartAssist: q.cartAssist,
     rawTokens: q.rawTokens,
+    strictSubCategory,
+  }
+}
+
+const CATEGORY_LABEL = {
+  top: '상의',
+  outer: '아우터',
+  bottom: '하의',
+  dress: '원피스',
+  shoes: '신발',
+  bag: '가방',
+  accessory: '액세서리',
+}
+
+/**
+ * Agent 응답용 구조화 키워드 (Intent 분류 후 설명·로그용).
+ * @param {string} message
+ */
+export function buildAgentKeywords(message) {
+  const f = parseRagKeywords(message)
+  const mainCat = f.categories?.[0]
+  const mainSub = f.subCategories?.[0]
+  const category =
+    mainSub || (mainCat ? CATEGORY_LABEL[mainCat] || mainCat : null) || null
+
+  return {
+    categories: f.categories,
+    subCategories: f.subCategories,
+    category,
+    strictSubCategory: f.strictSubCategory,
+    price: {
+      min: f.minPrice,
+      max: f.maxPrice,
+      minOp: f.minPriceOp,
+      maxOp: f.maxPriceOp,
+    },
+    color: f.color,
+    colorTokens: f.colors,
+    colorLabel: f.colorLabel,
+    styleKeyword: f.styleKeyword,
+    popular: f.popular,
   }
 }
 

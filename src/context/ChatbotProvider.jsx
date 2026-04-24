@@ -37,6 +37,8 @@ function loadStored() {
         content: m.content,
         productIds: Array.isArray(m.productIds) ? m.productIds.map(String) : [],
         createdAt: Number(m.createdAt) || Date.now(),
+        ...(typeof m.intent === 'string' ? { intent: m.intent } : {}),
+        ...(m.keywords && typeof m.keywords === 'object' ? { keywords: m.keywords } : {}),
       }))
   } catch {
     return null
@@ -54,6 +56,8 @@ function saveStored(messages) {
           content: m.content,
           productIds: m.productIds || [],
           createdAt: m.createdAt,
+          ...(m.intent ? { intent: m.intent } : {}),
+          ...(m.keywords ? { keywords: m.keywords } : {}),
         })),
       ),
     )
@@ -106,7 +110,7 @@ export function ChatbotProvider({ children }) {
       setMessages((prev) => [...prev, userMsg])
       setSending(true)
       try {
-        const { reply, picks } = await getChatbotAssistantReply({
+        const { reply, picks, intent, keywords } = await getChatbotAssistantReply({
           message: trimmed,
           products,
           cartProducts,
@@ -120,6 +124,8 @@ export function ChatbotProvider({ children }) {
             content: reply,
             productIds: ids,
             createdAt: Date.now(),
+            ...(intent ? { intent } : {}),
+            ...(keywords ? { keywords } : {}),
           },
         ])
       } catch {

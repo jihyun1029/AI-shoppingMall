@@ -13,6 +13,15 @@ import { rowToApiProduct } from '../productRowMapper.js'
 const TOP_K = 12
 const FINAL_N = 5
 
+function productFocusIntro(f) {
+  const cw = f.colorLabel || f.color
+  const sub = f.strictSubCategory
+  if (sub && cw) return `${cw} 컬러의 ${sub} 상품을 추천해드릴게요.`
+  if (sub) return `${sub} 상품을 추천해드릴게요.`
+  if (cw) return `${cw} 톤에 맞춘 상품을 추천해드릴게요.`
+  return null
+}
+
 /**
  * @param {object[]} products
  * @param {ReturnType<typeof parseRagKeywords>} f
@@ -22,8 +31,16 @@ function generateAdvancedReply(products, f, meta) {
   const minLabel = f.minPriceOp === '초과' ? '초과' : '이상'
   const maxLabel = f.maxPriceOp === '미만' ? '미만' : '이하'
   if (!products.length) {
+    const cw = f.colorLabel || f.color
+    const sub = f.strictSubCategory
+    if (sub && cw) {
+      return `${cw} ${sub} 상품은 현재 조건에 맞는 상품이 없어요. 색상이나 다른 조건을 완화해서 다시 추천드릴까요?`
+    }
+    if (sub) {
+      return `${sub} 상품은 현재 조건에 맞는 상품이 없어요. 조건을 완화해서 다시 검색해 보시겠어요?`
+    }
     if (f.colors?.length) {
-      const colorWord = f.colorLabel || f.color || '요청하신 컬러'
+      const colorWord = cw || '요청하신 컬러'
       const itemHint = (() => {
         if (f.subCategories?.length) return f.subCategories[0]
         if (f.categories?.[0] === 'bag') return '가방'
@@ -40,10 +57,15 @@ function generateAdvancedReply(products, f, meta) {
   }
 
   if (meta.usedFallback) {
-    return '조건 안에서 후보가 적어, 같은 조건의 인기 상품 위주로 추천드릴게요 😊'
+    return '말씀하신 조건에서 후보가 적어, 조건을 일부 완화해 인기 상품 위주로 추천드렸어요. 서브카테고리·색상이 달라질 수 있어요 😊'
   }
 
+  const intro = productFocusIntro(f)
+
   const styleLine = (() => {
+    if (f.strictSubCategory || f.colors?.length) {
+      return '실루엣과 소재를 함께 보시면 코디하기 좋아요.'
+    }
     switch (f.styleKeyword) {
       case 'office':
         return '출근룩에는 깔끔한 블라우스와 슬랙스 조합이 잘 어울려요.'
@@ -73,7 +95,7 @@ function generateAdvancedReply(products, f, meta) {
   if (f.maxPrice != null) priceHintParts.push(`${Math.round(f.maxPrice / 10000)}만 원 ${maxLabel}`)
   const priceHint = priceHintParts.length ? ` 가격은 ${priceHintParts.join(' · ')} 조건을 반영했어요.` : ''
   const categoryHint =
-    f.categories?.[0] === 'bag'
+    f.categories?.[0] === 'bag' && !intro
       ? '가방을 찾고 계시군요. 조건에 맞는 가방 상품을 추천해드릴게요.'
       : ''
 
@@ -83,7 +105,11 @@ function generateAdvancedReply(products, f, meta) {
     .join(', ')
   const more = others ? ` 추가로 ${others}도 함께 보면 좋아요.` : ''
 
-  return `${categoryHint} ${styleLine}${priceHint} ${reason}${more} 29CM / W컨셉 무드로 미니멀하게 코디해 보세요 😊`
+  const tail = `${priceHint} ${reason}${more} 29CM / W컨셉 무드로 미니멀하게 코디해 보세요 😊`
+  if (intro) {
+    return `${intro} ${styleLine}${tail}`.replace(/\s{2,}/g, ' ').trim()
+  }
+  return `${categoryHint} ${styleLine}${tail}`.replace(/\s{2,}/g, ' ').trim()
 }
 
 /**
@@ -94,6 +120,13 @@ function generateAdvancedReply(products, f, meta) {
  */
 export function runRagChat(db, message, opts = {}) {
   const f = parseRagKeywords(message)
+  console.log('[rag parsed]', {
+    strictSubCategory: f.strictSubCategory,
+    categories: f.categories,
+    subCategories: f.subCategories,
+    colors: f.colors,
+    colorLabel: f.colorLabel,
+  })
   let candidates = hybridSearch(db, f)
   if (candidates.length < 6) {
     const extra = searchRelaxedBlob(db, f)
@@ -118,8 +151,8 @@ export function runRagChat(db, message, opts = {}) {
 
   let usedFallback = false
   if (valid.length === 0) {
-    if (f.colors?.length) {
-      // 색상은 필수 조건: 다른 컬러로 채우는 fallback 금지
+    if (f.colors?.length || f.strictSubCategory) {
+      // 색상·서브카테고리 필수: 조건을 깨는 fallback 금지
     } else {
       const constrained = searchConstrainedFallback(db, f)
       if (constrained.length > 0) {
@@ -137,6 +170,15 @@ export function runRagChat(db, message, opts = {}) {
 
   const finalRanked = rerank(valid, f)
   const products = finalRanked.slice(0, FINAL_N).map(rowToApiProduct)
+  console.log('[rag filtered]', {
+    count: products.length,
+    items: products.map((p) => ({
+      id: p.id,
+      category: p.category,
+      subCategory: p.subCategory,
+      colors: (p.colors || []).map((c) => c.name),
+    })),
+  })
   const text = generateAdvancedReply(products, f, { usedFallback })
   return { text, products }
 }

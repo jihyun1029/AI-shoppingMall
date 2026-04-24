@@ -77,7 +77,7 @@ export function parseChatQuery(text) {
   }
 
   if (n.includes('데님') || n.includes('청바지')) {
-    if (!q.subCategories.includes('청바지')) q.subCategories.push('청바지')
+    if (!q.subCategories.includes('데님')) q.subCategories.push('데님')
     if (!q.categories.includes('bottom')) q.categories.push('bottom')
   }
 

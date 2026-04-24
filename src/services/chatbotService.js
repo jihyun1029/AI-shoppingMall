@@ -43,7 +43,12 @@ export async function getChatbotAssistantReply({ message, products, cartProducts
       }),
     })
     if (data && typeof data.text === 'string' && Array.isArray(data.products)) {
-      return { reply: data.text, picks: data.products.slice(0, 6) }
+      return {
+        reply: data.text,
+        picks: data.products.slice(0, 6),
+        intent: typeof data.intent === 'string' ? data.intent : undefined,
+        keywords: data.keywords && typeof data.keywords === 'object' ? data.keywords : undefined,
+      }
     }
   } catch {
     /* 로컬 폴백 */
