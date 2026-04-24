@@ -31,16 +31,32 @@ export const SUBCATEGORY_TRIGGER = [
   '원피스',
 ]
 
-/** 색상 표기 → DB 색상명 `colors[].name` 후보 */
-export const COLOR_ALIASES = [
+/**
+ * 색상 그룹: 사용자 표기(words) → DB JSON 배열에 들어갈 수 있는 이름(names), OR로 매칭
+ * (한 그룹 안 names는 OR, 여러 그룹이 동시에 매칭되면 토큰 합집합)
+ */
+export const COLOR_MATCH_GROUPS = [
+  {
+    names: ['퍼플', '라벤더', '보라', '바이올렛', '머브'],
+    words: ['보라색', '보라', '퍼플', 'purple', '라벤더', 'lavender', '바이올렛', '머브'],
+  },
   { names: ['블랙', '차콜'], words: ['블랙', '검정', '검은', 'black', 'blk', '다크'] },
-  { names: ['화이트', '아이보리', '크림'], words: ['화이트', '흰', '하양', 'white', '아이보리', 'ivory', '크림'] },
+  { names: ['화이트', '크림'], words: ['화이트', '흰', '하양', 'white', '크림'] },
+  { names: ['아이보리'], words: ['아이보리', 'ivory'] },
   { names: ['네이비'], words: ['네이비', 'navy', '남색'] },
-  { names: ['베이지', '카키', '올리브'], words: ['베이지', 'beige', '카키', 'khaki', '올리브', 'olive'] },
+  { names: ['베이지'], words: ['베이지', 'beige'] },
+  { names: ['카키', '올리브'], words: ['카키', 'khaki', '올리브', 'olive'] },
   { names: ['그레이', '멜란지', '차콜'], words: ['그레이', 'grey', 'gray', '멜란지', 'melange'] },
   { names: ['브라운', '버건디', '와인'], words: ['브라운', 'brown', '버건디', '와인', 'wine'] },
-  { names: ['블루', '라이트블루', '인디고', '연청', '미디엄블루'], words: ['블루', 'blue', '청', '데님'] },
+  {
+    names: ['블루', '라이트블루', '인디고', '연청', '미디엄블루'],
+    words: ['블루', 'blue', '연청', '스카이', '하늘색', '인디고'],
+  },
+  { names: ['핑크', '로즈'], words: ['핑크', 'pink', '로즈', 'rose'] },
 ]
+
+/** @deprecated COLOR_MATCH_GROUPS 사용 */
+export const COLOR_ALIASES = COLOR_MATCH_GROUPS
 
 export const GENDER_TRIGGER = [
   { value: 'male', words: ['남성', '남자', '맨즈', "men's", 'mens', '맨'] },

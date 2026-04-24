@@ -20,7 +20,10 @@ export function migrateProductsTable(db) {
   if (!colNames.has('salePrice')) {
     db.exec(`DROP TABLE products`)
     createProductsTable(db)
+    return
   }
+
+  ensureRagSearchIndex(db)
 }
 
 function createProductsTable(db) {
@@ -55,4 +58,18 @@ function createProductsTable(db) {
     CREATE INDEX IF NOT EXISTS idx_products_isBest ON products(isBest);
     CREATE INDEX IF NOT EXISTS idx_products_isNew ON products(isNew);
   `)
+  ensureRagSearchIndex(db)
+}
+
+/** RAG Hybrid 검색용: 결합 텍스트 lower 표현식 인덱스 (searchService.searchBlobExpression 와 동일해야 함) */
+export function ensureRagSearchIndex(db) {
+  try {
+    db.exec(`
+      CREATE INDEX IF NOT EXISTS idx_products_rag_blob ON products (
+        lower(brand || ' ' || name || ' ' || ifnull(category,'') || ' ' || ifnull(subCategory,'') || ' ' || ifnull(colors,'') || ' ' || ifnull(description,''))
+      )
+    `)
+  } catch (e) {
+    console.warn('[products] RAG search index:', e?.message || e)
+  }
 }

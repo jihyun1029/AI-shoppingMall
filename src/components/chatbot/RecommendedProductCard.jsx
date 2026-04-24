@@ -24,8 +24,8 @@ export function RecommendedProductCard({ product, onAdded }) {
   }
 
   return (
-    <article className="w-[164px] shrink-0 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
-      <Link to={`/products/${product.id}`} className="block aspect-[3/4] bg-zinc-100">
+    <article className="w-[190px] shrink-0 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
+      <Link to={`/products/${product.id}`} className="block aspect-square w-full overflow-hidden rounded-t-xl bg-zinc-100">
         <ProductImage
           product={product}
           src={img || undefined}

@@ -5,6 +5,7 @@ import { openDatabase, migrate } from './db.js'
 import { seedIfEmpty } from './seedDb.js'
 import { createAuthRouter } from './routes/auth.js'
 import { createProductsRouter } from './routes/products.js'
+import { createChatbotRouter } from './routes/chatbot.js'
 
 const port = Number(process.env.PORT || 4000)
 const db = openDatabase()
@@ -26,6 +27,7 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', createAuthRouter(db))
 app.use('/api/products', createProductsRouter(db))
+app.use('/api/chatbot', createChatbotRouter(db))
 
 app.use((err, _req, res, _next) => {
   console.error(err)

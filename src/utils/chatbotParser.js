@@ -1,6 +1,6 @@
 import {
   CATEGORY_TRIGGER,
-  COLOR_ALIASES,
+  COLOR_MATCH_GROUPS,
   GENDER_TRIGGER,
   SEASON_WORDS,
   SITUATION_WORDS,
@@ -81,7 +81,7 @@ export function parseChatQuery(text) {
     if (!q.categories.includes('bottom')) q.categories.push('bottom')
   }
 
-  for (const { names, words } of COLOR_ALIASES) {
+  for (const { names, words } of COLOR_MATCH_GROUPS) {
     for (const w of words) {
       if (n.includes(w.toLowerCase())) {
         for (const name of names) {

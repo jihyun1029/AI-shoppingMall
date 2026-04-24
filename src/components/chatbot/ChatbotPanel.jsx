@@ -49,6 +49,15 @@ export function ChatbotPanel() {
     return () => window.removeEventListener('keydown', onKey)
   }, [open, closePanel])
 
+  useEffect(() => {
+    if (!open) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prevOverflow
+    }
+  }, [open])
+
   if (!open) return null
 
   return (
@@ -66,7 +75,7 @@ export function ChatbotPanel() {
       >
         <ChatbotHeader onClose={closePanel} onClear={clearConversation} />
 
-        <div ref={scrollRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto px-3 py-3 sm:px-4">
+        <div ref={scrollRef} className="min-h-0 min-w-0 flex-1 space-y-3 overflow-x-hidden overflow-y-auto px-3 py-3 sm:px-4">
           {!hasMessages ? (
             <ChatMessage role="assistant" content={CHATBOT_WELCOME_MESSAGE} products={previewProducts} onAdded={() => showToast('장바구니에 담았어요.')} />
           ) : null}
