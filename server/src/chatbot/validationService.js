@@ -1,15 +1,14 @@
 import { productMatchesColorTokens } from './colorFilter.js'
+import { Product } from '../models/Product.js'
 
 /**
  * DB 재조회 + 규칙 검증 (환각 방지: 응답 상품은 DB에 존재하는 행만)
- * @param {import('better-sqlite3').Database} db
  * @param {Record<string, unknown>[]} rows
  * @param {ReturnType<import('./keywordParser.js').parseRagKeywords>} f
  * @param {{ strictCategory?: boolean }} [opts]
  */
-export function validateCandidates(db, rows, f, opts = {}) {
+export async function validateCandidates(rows, f, opts = {}) {
   const strictCategory = opts.strictCategory !== false
-  const stmt = db.prepare('SELECT * FROM products WHERE id = ? AND stock > 0')
   const out = []
   const dropped = []
 
@@ -19,7 +18,7 @@ export function validateCandidates(db, rows, f, opts = {}) {
       dropped.push('invalid-id')
       continue
     }
-    const fresh = stmt.get(id)
+    const fresh = await Product.findOne({ id, stock: { $gt: 0 } }).lean()
     if (!fresh) {
       dropped.push(`missing-${id}`)
       continue

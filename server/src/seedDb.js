@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { User } from './models/User.js'
+import { Product } from './models/Product.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const womenRowsPath = path.join(__dirname, '..', 'data', 'women_product_rows.json')
@@ -15,40 +17,25 @@ function loadWomenRows() {
   if (!Array.isArray(parsed) || parsed.length === 0) {
     throw new Error('women_product_rows.json is missing or empty. Run: node scripts/generate-women-seed.mjs')
   }
-  return parsed
+  return parsed.map((row) => ({
+    ...row,
+    colors: typeof row.colors === 'string' ? JSON.parse(row.colors) : (row.colors || []),
+    sizes: typeof row.sizes === 'string' ? JSON.parse(row.sizes) : (row.sizes || []),
+    isNew: Boolean(row.isNew),
+    isBest: Boolean(row.isBest),
+  }))
 }
 
-/** @param {import('better-sqlite3').Database} db */
-export function seedWomenProducts(db) {
+export async function seedWomenProducts() {
   const rows = loadWomenRows()
-  const insert = db.prepare(`
-    INSERT INTO products (
-      id, brand, name, category, subCategory, price, discountRate, salePrice,
-      colors, sizes, gender, rating, reviewCount, stock, isNew, isBest,
-      image, description, createdAt, updatedAt
-    ) VALUES (
-      @id, @brand, @name, @category, @subCategory, @price, @discountRate, @salePrice,
-      @colors, @sizes, @gender, @rating, @reviewCount, @stock, @isNew, @isBest,
-      @image, @description, @createdAt, @updatedAt
-    )
-  `)
-  const tx = db.transaction(() => {
-    for (const r of rows) {
-      insert.run(r)
-    }
-  })
-  tx()
+  await Product.insertMany(rows, { ordered: false })
 }
 
-export function seedAdminUser(db) {
-  const id = 'admin'
+export async function seedAdminUser() {
   const hash = bcrypt.hashSync(ADMIN_PASSWORD, 10)
   const now = new Date().toISOString()
-  db.prepare(
-    `INSERT INTO users (id, email, password_hash, name, gender, role, created_at)
-     VALUES (@id, @email, @password_hash, @name, @gender, @role, @created_at)`,
-  ).run({
-    id,
+  await User.create({
+    _id: 'admin',
     email: ADMIN_EMAIL,
     password_hash: hash,
     name: '관리자',
@@ -58,15 +45,15 @@ export function seedAdminUser(db) {
   })
 }
 
-export function seedIfEmpty(db) {
-  const userCount = db.prepare(`SELECT COUNT(*) AS c FROM users`).get().c
-  if (userCount === 0) seedAdminUser(db)
+export async function seedIfEmpty() {
+  const userCount = await User.countDocuments()
+  if (userCount === 0) await seedAdminUser()
 
-  const productCount = db.prepare(`SELECT COUNT(*) AS c FROM products`).get().c
-  if (productCount === 0) seedWomenProducts(db)
+  const productCount = await Product.countDocuments()
+  if (productCount === 0) await seedWomenProducts()
 }
 
-export function reseedProducts(db) {
-  db.prepare(`DELETE FROM products`).run()
-  seedWomenProducts(db)
+export async function reseedProducts() {
+  await Product.deleteMany({})
+  await seedWomenProducts()
 }

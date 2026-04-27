@@ -1,20 +1,20 @@
 import { slugBrand, toColorObjects } from '../../src/utils/productHelpers.js'
 
 /**
- * SQLite `products` 행 → 프론트엔드가 기대하는 상품 객체
+ * MongoDB `products` 문서 → 프론트엔드가 기대하는 상품 객체
  * @param {Record<string, unknown>} row
  */
 export function rowToApiProduct(row) {
-  const colorsArr = safeJsonArray(row.colors, [])
-  const sizesArr = safeJsonArray(row.sizes, [])
+  const colorsArr = Array.isArray(row.colors) ? row.colors.map(String) : []
+  const sizesArr = Array.isArray(row.sizes) ? row.sizes.map(String) : []
   const listPrice = Number(row.price)
   const discountRate = Number(row.discountRate) || 0
   const salePrice = Number(row.salePrice)
   const brand = String(row.brand || '')
   const rating = Number(row.rating) || 4.5
   const reviewCount = Number(row.reviewCount) || 0
-  const isNew = Number(row.isNew) === 1
-  const isBest = Number(row.isBest) === 1
+  const isNew = Boolean(row.isNew)
+  const isBest = Boolean(row.isBest)
 
   return {
     id: String(row.id),
@@ -50,7 +50,7 @@ export function rowToApiProduct(row) {
 }
 
 /**
- * 관리자 폼 정규화 결과 → SQLite INSERT 파라미터
+ * 관리자 폼 정규화 결과 → MongoDB insert 파라미터
  * @param {object} normalized normalizeAdminProductInput 결과
  * @param {string} id
  * @param {string} nowIso
@@ -60,8 +60,6 @@ export function apiProductToInsertRow(normalized, id, nowIso) {
     normalized.discountRate > 0 && normalized.originalPrice != null
       ? Number(normalized.originalPrice)
       : Number(normalized.salePrice)
-  const colorsJson = JSON.stringify((normalized.colors || []).map((c) => c.name))
-  const sizesJson = JSON.stringify(normalized.sizes || [])
   return {
     id: Number(id),
     brand: normalized.brand,
@@ -71,27 +69,17 @@ export function apiProductToInsertRow(normalized, id, nowIso) {
     price: listPrice,
     discountRate: normalized.discountRate,
     salePrice: normalized.salePrice,
-    colors: colorsJson,
-    sizes: sizesJson,
+    colors: (normalized.colors || []).map((c) => c.name),
+    sizes: normalized.sizes || [],
     gender: normalized.gender,
     rating: normalized.rating,
     reviewCount: normalized.reviewCount,
     stock: normalized.stock,
-    isNew: normalized.isNew ? 1 : 0,
-    isBest: normalized.isBest ? 1 : 0,
+    isNew: Boolean(normalized.isNew),
+    isBest: Boolean(normalized.isBest),
     image: normalized.image || (normalized.images && normalized.images[0]) || '',
     description: normalized.description,
     createdAt: normalized.createdAt || nowIso.slice(0, 10),
     updatedAt: nowIso,
-  }
-}
-
-function safeJsonArray(value, fallback) {
-  if (Array.isArray(value)) return value.map(String)
-  try {
-    const v = JSON.parse(String(value || '[]'))
-    return Array.isArray(v) ? v.map(String) : fallback
-  } catch {
-    return fallback
   }
 }

@@ -9,11 +9,10 @@ const FINAL_N = 5
 
 /**
  * Intent: CART_RECOMMEND — 장바구니 카테고리 기반 연관 상품.
- * @param {import('better-sqlite3').Database} db
  * @param {string} message
  * @param {string[]} cartProductIds
  */
-export function runCartRecommend(db, message, cartProductIds) {
+export async function runCartRecommend(message, cartProductIds) {
   const ids = (cartProductIds || []).map(String).filter(Boolean)
   if (!ids.length) {
     return {
@@ -23,9 +22,9 @@ export function runCartRecommend(db, message, cartProductIds) {
   }
 
   const f = parseRagKeywords(message)
-  const rows = searchByCartContext(db, ids, f)
+  const rows = await searchByCartContext(ids, f)
   const ranked = rerank(filterByHardConstraints(rows, f), f)
-  const { rows: valid } = validateCandidates(db, ranked.slice(0, TOP_K), f)
+  const { rows: valid } = await validateCandidates(ranked.slice(0, TOP_K), f)
   const products = valid.slice(0, FINAL_N).map(rowToApiProduct)
 
   const text =

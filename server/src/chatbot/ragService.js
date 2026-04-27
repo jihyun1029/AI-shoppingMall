@@ -58,11 +58,10 @@ function generateAdvancedReply(products, f, meta) {
 
 /**
  * 고급 RAG: Hybrid 검색 → Rerank → Validation → 템플릿 응답
- * @param {import('better-sqlite3').Database} db
  * @param {string} message
  * @param {{ cartProductIds?: string[] }} [opts]
  */
-export function runRagChat(db, message, opts = {}) {
+export async function runRagChat(message, opts = {}) {
   const f = parseRagKeywords(message)
   console.log('[rag parsed]', {
     strictSubCategory: f.strictSubCategory,
@@ -71,9 +70,10 @@ export function runRagChat(db, message, opts = {}) {
     colors: f.colors,
     colorLabel: f.colorLabel,
   })
-  let candidates = hybridSearch(db, f)
+
+  let candidates = await hybridSearch(f)
   if (candidates.length < 6) {
-    const extra = searchRelaxedBlob(db, f)
+    const extra = await searchRelaxedBlob(f)
     const m = new Map()
     for (const r of [...candidates, ...extra]) {
       if (r?.id != null) m.set(r.id, r)
@@ -84,13 +84,13 @@ export function runRagChat(db, message, opts = {}) {
 
   let ranked = rerank(candidates, f)
   let slice = ranked.slice(0, TOP_K)
-  let { rows: valid } = validateCandidates(db, slice, f)
+  let { rows: valid } = await validateCandidates(slice, f)
 
   if (opts.cartProductIds?.length && valid.length < 3) {
-    const extra = searchByCartContext(db, opts.cartProductIds, f)
+    const extra = await searchByCartContext(opts.cartProductIds, f)
     const merged = rerank(filterByHardConstraints([...valid, ...extra], f), f)
     slice = merged.slice(0, TOP_K)
-    valid = validateCandidates(db, slice, f).rows
+    valid = (await validateCandidates(slice, f)).rows
   }
 
   let usedFallback = false
@@ -98,15 +98,15 @@ export function runRagChat(db, message, opts = {}) {
     if (f.colors?.length || f.strictSubCategory) {
       // 색상·서브카테고리 필수: 조건을 깨는 fallback 금지
     } else {
-      const constrained = searchConstrainedFallback(db, f)
+      const constrained = await searchConstrainedFallback(f)
       if (constrained.length > 0) {
         ranked = rerank(constrained, f)
-        valid = validateCandidates(db, ranked.slice(0, TOP_K), f).rows
+        valid = (await validateCandidates(ranked.slice(0, TOP_K), f)).rows
         usedFallback = true
       } else if (!f.categories?.length && f.minPrice == null && f.maxPrice == null) {
-        const pop = searchPopularFallback(db)
+        const pop = await searchPopularFallback()
         ranked = rerank(pop, f)
-        valid = validateCandidates(db, ranked.slice(0, TOP_K), f, { strictCategory: false }).rows
+        valid = (await validateCandidates(ranked.slice(0, TOP_K), f, { strictCategory: false })).rows
         usedFallback = true
       }
     }

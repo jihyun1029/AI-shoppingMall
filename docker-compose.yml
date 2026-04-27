@@ -7,6 +7,19 @@
 #   CORS_ORIGIN=http://localhost:8080,http://192.168.0.10:8080 docker compose up --build
 
 services:
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
   api:
     build:
       context: .
@@ -15,11 +28,12 @@ services:
       - "4000:4000"
     environment:
       PORT: "4000"
-      DATABASE_PATH: /data/shop.db
+      MONGODB_URI: mongodb://mongo:27017/shopping-mall
       JWT_SECRET: ${JWT_SECRET:-docker-dev-change-me}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080,http://127.0.0.1:8080}
-    volumes:
-      - sqlite_data:/data
+    depends_on:
+      mongo:
+        condition: service_healthy
     healthcheck:
       test:
         [
@@ -31,7 +45,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-      start_period: 10s
+      start_period: 15s
 
   web:
     build:
@@ -46,4 +60,4 @@ services:
         condition: service_healthy
 
 volumes:
-  sqlite_data:
+  mongo_data:

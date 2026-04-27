@@ -1,25 +1,15 @@
+import { Product } from '../models/Product.js'
 import { preferredSubCategoriesForStyle, semanticExpansionTerms } from './keywordParser.js'
 
 const CANDIDATE_LIMIT = 18
 const MERGE_CAP = 22
-
-/** SQLite에서 사용할 검색용 텍스트 표현식 (컬럼 추가 없이 인덱싱 가능) */
-export function searchBlobExpression() {
-  return `lower(brand || ' ' || name || ' ' || ifnull(category,'') || ' ' || ifnull(subCategory,'') || ' ' || ifnull(colors,'') || ' ' || ifnull(description,''))`
-}
 
 /**
  * Contextual Retrieval: 행 단위 searchText (오프라인 설명·재랭킹·로그용)
  * @param {Record<string, unknown>} row
  */
 export function buildSearchTextFromRow(row) {
-  let colors = ''
-  try {
-    const arr = JSON.parse(String(row.colors || '[]'))
-    if (Array.isArray(arr)) colors = arr.join(' ')
-  } catch {
-    colors = String(row.colors || '')
-  }
+  const colors = Array.isArray(row.colors) ? row.colors.join(' ') : String(row.colors || '')
   const styleHints = inferStyleHintsFromRow(row)
   return [
     `브랜드 ${row.brand}`,
@@ -50,130 +40,154 @@ function inferStyleHintsFromRow(row) {
   return [...new Set(hints)]
 }
 
-/**
- * colors JSON 컬럼에 대해 동의어 OR 필터 (필수 조건)
- * @param {string[]} parts
- * @param {unknown[]} vals
- * @param {ReturnType<import('./keywordParser.js').parseRagKeywords>} f
- */
-export function appendColorWhere(parts, vals, f) {
-  if (!f.colors?.length) return
-  const ors = f.colors.map(() => 'colors LIKE ?')
-  parts.push(`(${ors.join(' OR ')})`)
-  for (const c of f.colors) {
-    vals.push(`%"${c}"%`)
+function buildBaseQuery(f) {
+  const q = { stock: { $gt: 0 } }
+
+  if (f.categories?.length) q.category = { $in: f.categories }
+
+  if (f.strictSubCategory) {
+    q.subCategory = f.strictSubCategory
+  } else if (f.subCategories?.length) {
+    const regexes = f.subCategories.map((s) => new RegExp(s, 'i'))
+    q.$or = [
+      { subCategory: { $in: f.subCategories } },
+      { name: { $in: regexes } },
+      { description: { $in: regexes } },
+    ]
   }
+
+  if (f.colors?.length) {
+    q.colors = { $in: f.colors.map((c) => new RegExp(`^${c}$`, 'i')) }
+  }
+
+  if (f.maxPrice != null && !Number.isNaN(f.maxPrice)) {
+    q.salePrice = { ...q.salePrice, $lte: f.maxPrice }
+  }
+  if (f.minPrice != null && !Number.isNaN(f.minPrice)) {
+    q.salePrice = { ...q.salePrice, $gte: f.minPrice }
+  }
+
+  return q
 }
 
-/** 서브카테고리 정확 일치 (슬랙스·스커트·데님 등 명시 시 필수) */
-export function appendStrictSubcategoryWhere(parts, vals, f) {
-  if (!f.strictSubCategory) return
-  parts.push('subCategory = ?')
-  vals.push(f.strictSubCategory)
-}
-
-function orderClauseStructured(f, pref) {
-  const parts = []
-  const extraVals = []
-  if (f.popular) parts.push('isBest DESC')
-  if (pref.length) {
-    const inner = pref.map(() => 'WHEN subCategory = ? THEN 1').join(' ')
-    parts.push('(CASE ' + inner + ' ELSE 0 END) DESC')
-    extraVals.push(...pref)
-  }
-  parts.push('rating DESC', 'reviewCount DESC')
-  return { sql: parts.join(', '), extraVals }
+function sortByPreferred(docs, f) {
+  const pref = preferredSubCategoriesForStyle(f.styleKeyword || '')
+  if (!pref.length && !f.popular) return docs
+  return [...docs].sort((a, b) => {
+    if (f.popular) {
+      const diff = (b.isBest ? 1 : 0) - (a.isBest ? 1 : 0)
+      if (diff !== 0) return diff
+    }
+    if (pref.length) {
+      const ap = pref.includes(a.subCategory) ? 1 : 0
+      const bp = pref.includes(b.subCategory) ? 1 : 0
+      if (ap !== bp) return bp - ap
+    }
+    if (b.rating !== a.rating) return b.rating - a.rating
+    return b.reviewCount - a.reviewCount
+  })
 }
 
 /**
  * (1) 구조화 키워드 검색
- * @param {import('better-sqlite3').Database} db
  * @param {ReturnType<import('./keywordParser.js').parseRagKeywords>} f
  */
-export function keywordStructuredSearch(db, f) {
-  const where = ['stock > 0']
-  const vals = []
-
-  if (f.categories?.length) {
-    where.push(`category IN (${f.categories.map(() => '?').join(',')})`)
-    vals.push(...f.categories)
-  }
-
-  if (f.strictSubCategory) {
-    appendStrictSubcategoryWhere(where, vals, f)
-  } else if (f.subCategories?.length) {
-    const ors = f.subCategories.map(() => '(subCategory = ? OR name LIKE ? OR description LIKE ?)')
-    for (const sub of f.subCategories) {
-      vals.push(sub, `%${sub}%`, `%${sub}%`)
-    }
-    where.push(`(${ors.join(' OR ')})`)
-  }
-
-  appendColorWhere(where, vals, f)
-
-  if (f.maxPrice != null && !Number.isNaN(f.maxPrice)) {
-    where.push('salePrice <= ?')
-    vals.push(f.maxPrice)
-  }
-  if (f.minPrice != null && !Number.isNaN(f.minPrice)) {
-    where.push('salePrice >= ?')
-    vals.push(f.minPrice)
-  }
-
-  const pref = preferredSubCategoriesForStyle(f.styleKeyword || '')
-  const { sql: orderSql, extraVals } = orderClauseStructured(f, pref)
-  const allVals = [...vals, ...extraVals]
-  const blob = searchBlobExpression()
-
-  const sql = `
-    SELECT *, ${blob} AS _search_blob
-    FROM products
-    WHERE ${where.join(' AND ')}
-    ORDER BY ${orderSql}
-    LIMIT ${CANDIDATE_LIMIT}
-  `.trim()
-
-  return db.prepare(sql).all(...allVals)
+export async function keywordStructuredSearch(f) {
+  const q = buildBaseQuery(f)
+  const docs = await Product.find(q)
+    .sort({ isBest: -1, rating: -1, reviewCount: -1 })
+    .limit(CANDIDATE_LIMIT)
+    .lean()
+  return sortByPreferred(docs, f)
 }
 
 /**
- * (2) 스타일 확장 키워드로 search blob LIKE (의미 기반 간이 확장)
+ * (2) 스타일 확장 키워드로 regex 검색 (의미 기반 간이 확장)
  */
-export function semanticExpandedSearch(db, f) {
+export async function semanticExpandedSearch(f) {
   if (f.strictSubCategory) return []
   const terms = semanticExpansionTerms(f.styleKeyword)
   if (!terms.length) return []
 
-  const blob = searchBlobExpression()
-  const ors = terms.map(() => `${blob} LIKE ?`)
-  const vals = terms.map((t) => `%${String(t).toLowerCase()}%`)
-
-  const where = ['stock > 0', `(${ors.join(' OR ')})`]
-  if (f.maxPrice != null && !Number.isNaN(f.maxPrice)) {
-    where.push('salePrice <= ?')
-    vals.push(f.maxPrice)
+  const regexes = terms.map((t) => new RegExp(t, 'i'))
+  const q = {
+    stock: { $gt: 0 },
+    $or: [
+      { brand: { $in: regexes } },
+      { name: { $in: regexes } },
+      { subCategory: { $in: regexes } },
+      { description: { $in: regexes } },
+      { colors: { $in: regexes } },
+    ],
   }
-  if (f.minPrice != null && !Number.isNaN(f.minPrice)) {
-    where.push('salePrice >= ?')
-    vals.push(f.minPrice)
+  if (f.maxPrice != null && !Number.isNaN(f.maxPrice)) q.salePrice = { $lte: f.maxPrice }
+  if (f.minPrice != null && !Number.isNaN(f.minPrice)) q.salePrice = { ...q.salePrice, $gte: f.minPrice }
+  if (f.categories?.length) q.category = { $in: f.categories }
+  if (f.strictSubCategory) q.subCategory = f.strictSubCategory
+  if (f.colors?.length) q.colors = { $in: f.colors.map((c) => new RegExp(`^${c}$`, 'i')) }
+
+  return Product.find(q).sort({ isBest: -1, rating: -1, reviewCount: -1 }).limit(CANDIDATE_LIMIT).lean()
+}
+
+export async function searchRelaxedBlob(f) {
+  const tok = (f.rawTokens || []).filter((t) => t.length >= 2).slice(0, 5)
+  if (!tok.length) return []
+
+  const regexes = tok.map((t) => new RegExp(t, 'i'))
+  const q = {
+    stock: { $gt: 0 },
+    $or: [
+      { brand: { $in: regexes } },
+      { name: { $in: regexes } },
+      { subCategory: { $in: regexes } },
+      { description: { $in: regexes } },
+      { colors: { $in: regexes } },
+    ],
   }
-  if (f.categories?.length) {
-    where.push(`category IN (${f.categories.map(() => '?').join(',')})`)
-    vals.push(...f.categories)
-  }
+  if (f.maxPrice != null && !Number.isNaN(f.maxPrice)) q.salePrice = { $lte: f.maxPrice }
+  if (f.minPrice != null && !Number.isNaN(f.minPrice)) q.salePrice = { ...q.salePrice, $gte: f.minPrice }
+  if (f.categories?.length) q.category = { $in: f.categories }
+  if (f.strictSubCategory) q.subCategory = f.strictSubCategory
+  if (f.colors?.length) q.colors = { $in: f.colors.map((c) => new RegExp(`^${c}$`, 'i')) }
 
-  appendStrictSubcategoryWhere(where, vals, f)
-  appendColorWhere(where, vals, f)
+  return Product.find(q).sort({ isBest: -1, rating: -1, reviewCount: -1 }).limit(CANDIDATE_LIMIT).lean()
+}
 
-  const sql = `
-    SELECT *, ${blob} AS _search_blob
-    FROM products
-    WHERE ${where.join(' AND ')}
-    ORDER BY isBest DESC, rating DESC, reviewCount DESC
-    LIMIT ${CANDIDATE_LIMIT}
-  `.trim()
+export async function searchPopularFallback() {
+  return Product.find({ stock: { $gt: 0 } })
+    .sort({ isBest: -1, rating: -1, reviewCount: -1 })
+    .limit(8)
+    .lean()
+}
 
-  return db.prepare(sql).all(...vals)
+export async function searchConstrainedFallback(f) {
+  const q = { stock: { $gt: 0 } }
+  if (f.categories?.length) q.category = { $in: f.categories }
+  if (f.maxPrice != null && !Number.isNaN(f.maxPrice)) q.salePrice = { $lte: f.maxPrice }
+  if (f.minPrice != null && !Number.isNaN(f.minPrice)) q.salePrice = { ...q.salePrice, $gte: f.minPrice }
+  if (f.strictSubCategory) q.subCategory = f.strictSubCategory
+  if (f.colors?.length) q.colors = { $in: f.colors.map((c) => new RegExp(`^${c}$`, 'i')) }
+
+  return Product.find(q).sort({ isBest: -1, rating: -1, reviewCount: -1 }).limit(8).lean()
+}
+
+export async function searchByCartContext(ids, f = null) {
+  if (!ids?.length) return []
+  const nums = ids.map((id) => Number(id)).filter((n) => Number.isFinite(n))
+  if (!nums.length) return []
+
+  const cartProducts = await Product.find(
+    { id: { $in: nums }, stock: { $gt: 0 } },
+    'category',
+  ).lean()
+  const cats = [...new Set(cartProducts.map((d) => d.category))].filter(Boolean)
+  if (!cats.length) return []
+
+  const q = { stock: { $gt: 0 }, category: { $in: cats }, id: { $nin: nums } }
+  if (f?.strictSubCategory) q.subCategory = f.strictSubCategory
+  if (f?.colors?.length) q.colors = { $in: f.colors.map((c) => new RegExp(`^${c}$`, 'i')) }
+
+  return Product.find(q).sort({ isBest: -1, rating: -1, reviewCount: -1 }).limit(8).lean()
 }
 
 function mergeById(a, b) {
@@ -185,113 +199,15 @@ function mergeById(a, b) {
   return [...map.values()].slice(0, MERGE_CAP)
 }
 
-export function searchRelaxedBlob(db, f) {
-  const blob = searchBlobExpression()
-  const tok = (f.rawTokens || []).filter((t) => t.length >= 2).slice(0, 5)
-  if (!tok.length) return []
-  const ors = tok.map(() => `${blob} LIKE ?`)
-  const vals = tok.map((t) => `%${t.toLowerCase()}%`)
-  const where = ['stock > 0', `(${ors.join(' OR ')})`]
-  if (f.maxPrice != null && !Number.isNaN(f.maxPrice)) {
-    where.push('salePrice <= ?')
-    vals.push(f.maxPrice)
-  }
-  if (f.minPrice != null && !Number.isNaN(f.minPrice)) {
-    where.push('salePrice >= ?')
-    vals.push(f.minPrice)
-  }
-  if (f.categories?.length) {
-    where.push(`category IN (${f.categories.map(() => '?').join(',')})`)
-    vals.push(...f.categories)
-  }
-  appendStrictSubcategoryWhere(where, vals, f)
-  appendColorWhere(where, vals, f)
-  const sql = `
-    SELECT *, ${blob} AS _search_blob
-    FROM products
-    WHERE ${where.join(' AND ')}
-    ORDER BY isBest DESC, rating DESC, reviewCount DESC
-    LIMIT ${CANDIDATE_LIMIT}
-  `.trim()
-  return db.prepare(sql).all(...vals)
-}
-
-export function searchPopularFallback(db) {
-  const blob = searchBlobExpression()
-  return db
-    .prepare(
-      `
-    SELECT *, ${blob} AS _search_blob
-    FROM products
-    WHERE stock > 0
-    ORDER BY isBest DESC, rating DESC, reviewCount DESC
-    LIMIT 8
-  `.trim(),
-    )
-    .all()
-}
-
-export function searchConstrainedFallback(db, f) {
-  const blob = searchBlobExpression()
-  const where = ['stock > 0']
-  const vals = []
-  if (f.categories?.length) {
-    where.push(`category IN (${f.categories.map(() => '?').join(',')})`)
-    vals.push(...f.categories)
-  }
-  if (f.maxPrice != null && !Number.isNaN(f.maxPrice)) {
-    where.push('salePrice <= ?')
-    vals.push(f.maxPrice)
-  }
-  if (f.minPrice != null && !Number.isNaN(f.minPrice)) {
-    where.push('salePrice >= ?')
-    vals.push(f.minPrice)
-  }
-  appendStrictSubcategoryWhere(where, vals, f)
-  appendColorWhere(where, vals, f)
-  const sql = `
-    SELECT *, ${blob} AS _search_blob
-    FROM products
-    WHERE ${where.join(' AND ')}
-    ORDER BY isBest DESC, rating DESC, reviewCount DESC
-    LIMIT 8
-  `.trim()
-  return db.prepare(sql).all(...vals)
-}
-
-export function searchByCartContext(db, ids, f = null) {
-  if (!ids?.length) return []
-  const nums = ids.map((id) => Number(id)).filter((n) => Number.isFinite(n))
-  if (!nums.length) return []
-  const ph = nums.map(() => '?').join(',')
-  const blob = searchBlobExpression()
-  const catRows = db.prepare(`SELECT DISTINCT category FROM products WHERE id IN (${ph}) AND stock > 0`).all(...nums)
-  const cats = catRows.map((r) => r.category).filter(Boolean)
-  if (!cats.length) return []
-  const cph = cats.map(() => '?').join(',')
-  const where = [`stock > 0`, `category IN (${cph})`, `id NOT IN (${ph})`]
-  const vals = [...cats, ...nums]
-  appendStrictSubcategoryWhere(where, vals, f || {})
-  appendColorWhere(where, vals, f || {})
-  const sql = `
-    SELECT *, ${blob} AS _search_blob
-    FROM products
-    WHERE ${where.join(' AND ')}
-    ORDER BY isBest DESC, rating DESC, reviewCount DESC
-    LIMIT 8
-  `.trim()
-  return db.prepare(sql).all(...vals)
-}
-
 /**
  * Hybrid: 구조화 검색 ∪ 스타일 확장 검색 → 후보 통합
  */
-export function hybridSearch(db, f) {
-  const a = keywordStructuredSearch(db, f)
-  const b = f.strictSubCategory ? [] : semanticExpandedSearch(db, f)
+export async function hybridSearch(f) {
+  const a = await keywordStructuredSearch(f)
+  const b = f.strictSubCategory ? [] : await semanticExpandedSearch(f)
   let merged = mergeById(a, b)
   if (merged.length < 6) {
-    const c = searchRelaxedBlob(db, f)
+    const c = await searchRelaxedBlob(f)
     merged = mergeById(merged, c)
   }
   return merged

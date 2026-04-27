@@ -14,7 +14,7 @@ import { answerGeneralInfo } from './generalInfoService.js'
  *
  * 응답: { intent, keywords, text, products }
  */
-export function postChatbot(db, req, res) {
+export async function postChatbot(req, res) {
   const message = String(req.body?.message || '').trim()
   if (!message) {
     res.status(400).json({ message: 'message 필드가 필요합니다.' })
@@ -35,19 +35,19 @@ export function postChatbot(db, req, res) {
 
     switch (intent) {
       case INTENT.CART_RECOMMEND: {
-        const out = runCartRecommend(db, message, cartProductIds || [])
+        const out = await runCartRecommend(message, cartProductIds || [])
         text = out.text
         productsRaw = out.products
         break
       }
       case INTENT.COORDINATION_RECOMMEND: {
-        const out = runCoordinationRecommend(db, message)
+        const out = await runCoordinationRecommend(message)
         text = out.text
         productsRaw = out.products
         break
       }
       case INTENT.WEATHER_COORDINATION: {
-        const out = runWeatherCoordinationRecommend(db, message)
+        const out = await runWeatherCoordinationRecommend(message)
         text = out.text
         productsRaw = out.products
         break
@@ -60,7 +60,7 @@ export function postChatbot(db, req, res) {
       }
       case INTENT.PRODUCT_RECOMMEND:
       default: {
-        const out = runProductRecommend(db, message, { cartProductIds })
+        const out = await runProductRecommend(message, { cartProductIds })
         text = out.text
         productsRaw = out.products
         break

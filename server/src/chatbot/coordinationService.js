@@ -171,10 +171,9 @@ function bodyTypeRowBoost(row, bodyType) {
 
 /**
  * Intent: COORDINATION_RECOMMEND — 슬롯별 1벌씩 골라 코디 세트 구성.
- * @param {import('better-sqlite3').Database} db
  * @param {string} message
  */
-export function runCoordinationRecommend(db, message) {
+export async function runCoordinationRecommend(message) {
   const base = parseRagKeywords(message)
   const n = norm(message)
   const bodyType = base.bodyType || detectBodyTypeFromMessage(n)
@@ -198,9 +197,9 @@ export function runCoordinationRecommend(db, message) {
       subCategories: [slot.subCategory],
       strictSubCategory: slot.subCategory,
     }
-    const rows = keywordStructuredSearch(db, f)
+    const rows = await keywordStructuredSearch(f)
     const ok = filterByHardConstraints(rows, f)
-    const { rows: valid } = validateCandidates(db, ok.slice(0, 6), f)
+    const { rows: valid } = await validateCandidates(ok.slice(0, 6), f)
     const sorted = [...valid].sort((a, b) => bodyTypeRowBoost(b, bodyType) - bodyTypeRowBoost(a, bodyType))
     const row = sorted[0]
     if (row && !seen.has(row.id)) {
@@ -296,7 +295,7 @@ function slotsForWeather(temp, styleKey) {
   ]
 }
 
-export function runWeatherCoordinationRecommend(db, message) {
+export async function runWeatherCoordinationRecommend(message) {
   const f = parseRagKeywords(message)
   const n = norm(message)
   const temp = f.temperature
@@ -319,9 +318,9 @@ export function runWeatherCoordinationRecommend(db, message) {
       subCategories: [slot.subCategory],
       strictSubCategory: slot.subCategory,
     }
-    const rows = keywordStructuredSearch(db, sf)
+    const rows = await keywordStructuredSearch(sf)
     const ok = filterByHardConstraints(rows, sf)
-    const { rows: valid } = validateCandidates(db, ok.slice(0, 8), sf)
+    const { rows: valid } = await validateCandidates(ok.slice(0, 8), sf)
     const row = valid[0]
     if (row && !seen.has(row.id)) {
       seen.add(row.id)
@@ -339,9 +338,9 @@ export function runWeatherCoordinationRecommend(db, message) {
   }
 
   const fallbackF = { ...f, strictSubCategory: null, subCategories: weatherBandRule(temp).subs, categories: [] }
-  const rows = keywordStructuredSearch(db, fallbackF)
+  const rows = await keywordStructuredSearch(fallbackF)
   const ok = filterByHardConstraints(rows, fallbackF)
-  const { rows: valid } = validateCandidates(db, ok.slice(0, 8), fallbackF)
+  const { rows: valid } = await validateCandidates(ok.slice(0, 8), fallbackF)
   const fallback = valid.map(rowToApiProduct).slice(0, 4)
   return {
     text: `현재 ${temp}도 기준 정확히 맞는 조합이 적어 비슷한 계절감 상품으로 골라드렸어요. ${baseGuide}`,
