@@ -1,15 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { cartLineKey } from '../utils/cartLineKey'
 import { CartContext } from './cartContext'
 import { useAuth } from '../hooks/useAuth'
 import { useProductCatalog } from '../hooks/useProductCatalog'
 
-const STORAGE_KEY = 'studio-line-cart-v3'
+const KEY_PREFIX = 'studio-line-cart-v3'
 
-function readStoredLines() {
+function storageKey(userId) {
+  return userId ? `${KEY_PREFIX}-${userId}` : null
+}
+
+function readStoredLines(key) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(key)
     if (!raw) return []
     const parsed = JSON.parse(raw)
     if (!Array.isArray(parsed)) return []
@@ -29,9 +33,9 @@ function readStoredLines() {
   }
 }
 
-function writeStoredLines(lines) {
+function writeStoredLines(key, lines) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(lines))
+    localStorage.setItem(key, JSON.stringify(lines))
   } catch {
     /* ignore */
   }
@@ -39,13 +43,25 @@ function writeStoredLines(lines) {
 
 export function CartProvider({ children }) {
   const { products } = useProductCatalog()
-  const { isAuthenticated } = useAuth()
+  const { user, isAuthenticated } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
-  const [lines, setLines] = useState(() => readStoredLines())
 
+  const key = storageKey(user?.id)
+  const keyRef = useRef(key)
+  keyRef.current = key
+
+  const [lines, setLines] = useState(() => (key ? readStoredLines(key) : []))
+
+  // 사용자 변경(로그인·로그아웃·계정 전환) 시 해당 사용자의 장바구니 로드
   useEffect(() => {
-    writeStoredLines(lines)
+    setLines(key ? readStoredLines(key) : [])
+  }, [key])
+
+  // lines 변경 시 현재 사용자 키로 저장 (keyRef를 써서 이전 사용자 키에 쓰지 않음)
+  useEffect(() => {
+    if (!keyRef.current) return
+    writeStoredLines(keyRef.current, lines)
   }, [lines])
 
   const addItem = useCallback(({ productId, colorId, colorLabel, size, quantity = 1 }) => {
@@ -55,29 +71,26 @@ export function CartProvider({ children }) {
     }
     const product = products.find((p) => String(p.id) === String(productId))
     if (!product || quantity < 1) return false
-    const key = cartLineKey(productId, colorId, size)
+    const k = cartLineKey(productId, colorId, size)
     setLines((prev) => {
-      const idx = prev.findIndex((l) => l.key === key)
+      const idx = prev.findIndex((l) => l.key === k)
       if (idx === -1) {
-        return [...prev, { key, productId, colorId, colorLabel, size, quantity }]
+        return [...prev, { key: k, productId, colorId, colorLabel, size, quantity }]
       }
       const next = [...prev]
-      next[idx] = {
-        ...next[idx],
-        quantity: next[idx].quantity + quantity,
-      }
+      next[idx] = { ...next[idx], quantity: next[idx].quantity + quantity }
       return next
     })
     return true
   }, [products, isAuthenticated, navigate, location])
 
-  const setQuantity = useCallback((key, quantity) => {
+  const setQuantity = useCallback((k, quantity) => {
     if (quantity < 1) {
-      setLines((prev) => prev.filter((l) => l.key !== key))
+      setLines((prev) => prev.filter((l) => l.key !== k))
       return
     }
     setLines((prev) => {
-      const idx = prev.findIndex((l) => l.key === key)
+      const idx = prev.findIndex((l) => l.key === k)
       if (idx === -1) return prev
       const next = [...prev]
       next[idx] = { ...next[idx], quantity }
@@ -85,8 +98,8 @@ export function CartProvider({ children }) {
     })
   }, [])
 
-  const removeItem = useCallback((key) => {
-    setLines((prev) => prev.filter((l) => l.key !== key))
+  const removeItem = useCallback((k) => {
+    setLines((prev) => prev.filter((l) => l.key !== k))
   }, [])
 
   const clearCart = useCallback(() => setLines([]), [])
