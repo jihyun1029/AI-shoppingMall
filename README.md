@@ -5,22 +5,196 @@ React + Express 기반의 풀스택 쇼핑몰 포트폴리오 프로젝트입니
 
 ---
 
-## 주요 기능
+## 1. 문제 정의
 
-| 영역 | 기능 |
-|------|------|
-| 상품 | 카테고리·서브카테고리 필터, 정렬, 검색 |
-| 상품 상세 | 색상·사이즈 선택, 이미지 폴백 처리 |
-| 장바구니 | 수량 조절, 총액 계산 |
-| 주문 | 주문 완료 페이지, 주문 내역 |
-| 회원 | 회원가입 / 로그인 (JWT), 마이페이지 |
-| AI 챗봇 | 플로팅 챗봇 패널, 빠른 질문 버튼, 10-Agent 파이프라인 기반 intent 추론, 다중 턴 대화 컨텍스트 유지, 상품별 추천 이유(reason) |
-| 추천 | 장바구니 기반 연관 상품 추천 |
-| 관리자 | 상품 CRUD (목록·등록·수정), 대시보드 |
+쇼핑몰 챗봇은 단순 키워드 매칭으로는 사용자의 실제 의도를 파악하기 어렵습니다.
+
+- **모호한 의도**: "바지 추천해줘"는 상품 검색인가, 코디 제안인가?
+- **복합 조건**: "23도 날씨에 바지 코디, 통통한 체형 커버까지 해줘"처럼 조건이 누적됨
+- **후속 질문 처리**: "그럼 바지로 바꿔줘"처럼 이전 대화 맥락 없이는 답할 수 없는 질문
+- **카테고리 혼선**: "바지"는 슬랙스·데님만, "하의"는 스커트 포함 — 사용자 의도가 다름
+- **빈 장바구니 처리**: 장바구니 추천 요청 시 비어 있는 경우 자연스러운 안내 필요
 
 ---
 
-## 기술 스택
+## 2. 해결 방향
+
+단일 함수 기반 룰에서 **10-Agent 순차 파이프라인**으로 전환해 각 판단 단계를 분리했습니다.
+
+- **Intent 분류**로 질문 유형(상품/코디/날씨/장바구니/FAQ)을 먼저 결정
+- **Parser Agent**가 키워드(카테고리·색상·가격·체형·기온)를 구조화된 객체로 추출
+- **`allowedSubCategories` / `excludedSubCategories`** 개념 도입으로 바지↔스커트 필터를 명시적으로 분리
+- **`lastContext`** 를 프론트엔드 세션에 보관 후 매 요청마다 전달 → 후속 질문 시 이전 조건 누적·병합
+- 코디 슬롯별로 독립 필터를 적용해 "상의 슬롯에 바지 필터가 섞이는" 문제 차단
+
+---
+
+## 3. 트레이드오프 및 설계 결정
+
+| 결정 | 선택 | 이유 |
+|------|------|------|
+| Intent 분류 방식 | 키워드 점수 기반 (LLM 없음) | 외부 API 의존성 없이 빠른 응답, 포트폴리오 환경에서 비용 0 |
+| DB | SQLite → MongoDB | 비정형 상품 속성(색상 배열 등) 표현이 자연스럽고 Docker 구성이 단순해짐 |
+| 컨텍스트 저장 위치 | 프론트엔드 세션 (`useState`) | 서버 세션 없이도 다중 턴 유지 가능, 서버 무상태 유지 |
+| 후속 질문 감지 | 명시적 마커 + 스레드 유무 판별 | 짧은 문장 단순 판별보다 오탐 감소 |
+| 코디 슬롯 격리 | 슬롯마다 `allowedSubCategories: []` 초기화 | 바지 필터가 상의·신발 슬롯에 전파되는 버그 방지 |
+| 폴백 전략 | 조건 완화 후 인기순 재검색 | 결과 0건보다 차선 추천이 UX상 낫다고 판단 |
+
+---
+
+## 4. 시스템 아키텍처
+
+```
+┌─────────────────────────────────────────────┐
+│                 Browser                     │
+│  React 19 + Tailwind CSS                    │
+│  ChatbotProvider (lastContext 세션 보관)     │
+│        │ POST /api/chatbot                  │
+│        │ { message, cartProductIds,         │
+│        │   lastContext }                    │
+└────────┼────────────────────────────────────┘
+         │
+┌────────▼────────────────────────────────────┐
+│            Express API  :4000               │
+│  chatbotController → chatbotWorkflow        │
+│                                             │
+│  ┌──────────────────────────────────────┐   │
+│  │  10-Agent Pipeline (순차 실행)        │   │
+│  │  Intent → Parser → Planner           │   │
+│  │  → Weather / BodyType / Style        │   │
+│  │  → Retrieval → Ranking               │   │
+│  │  → Validation → Response             │   │
+│  └──────────────────────────────────────┘   │
+│        │ Mongoose ODM                        │
+└────────┼────────────────────────────────────┘
+         │
+┌────────▼──────────┐
+│   MongoDB :27017  │
+│  products / users │
+│  orders / carts   │
+└───────────────────┘
+```
+
+**요청 흐름 요약**
+
+1. 프론트엔드가 `message` + `lastContext` 를 POST로 전송
+2. `chatbotWorkflow`가 10개 Agent를 순서대로 실행
+3. 후속 질문 감지 시 `lastContext`와 현재 파싱 결과를 병합
+4. MongoDB에서 슬롯별 상품 검색 → 랭킹 → 검증
+5. `{ intent, keywords, text, products }` 응답 반환
+6. 프론트엔드가 `keywords`에서 다음 요청용 `lastContext`를 추출·저장
+
+---
+
+## 5. 에이전트 파이프라인
+
+```
+사용자 메시지
+     │
+     ▼
+┌─────────────┐
+│ intentAgent │ → PRODUCT / COORDINATION / WEATHER / CART / GENERAL
+└──────┬──────┘
+       ▼
+┌─────────────┐
+│ parserAgent │ → { categories, subCategories, colors, price,
+└──────┬──────┘     temperature, bodyType,
+       │            allowedSubCategories, excludedSubCategories }
+       ▼
+┌──────────────┐
+│ plannerAgent │ → { strategy, useWeather, useBodyType, useStyle }
+└──────┬───────┘
+       ├──────────────────────────────────┐
+       ▼                                  ▼
+┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│ weatherAgent│  │bodyTypeAgent│  │  styleAgent │
+│ 기온→시즌   │  │체형→보완힌트│  │슬롯구성(상의│
+│ 추천서브카테│  │선호색상/서브│  │하의·신발·백)│
+└──────┬──────┘  └──────┬──────┘  └──────┬──────┘
+       └─────────────────┴─────────────────┘
+                         │
+                         ▼
+              ┌──────────────────┐
+              │ retrievalAgent   │
+              │ MongoDB 검색     │
+              │ 슬롯별 필터 격리 │
+              └────────┬─────────┘
+                       ▼
+              ┌──────────────────┐
+              │  rankingAgent    │
+              │ 조건 일치도+평점 │
+              └────────┬─────────┘
+                       ▼
+              ┌──────────────────┐
+              │ validationAgent  │
+              │ 슬롯별 검증+폴백 │
+              └────────┬─────────┘
+                       ▼
+              ┌──────────────────┐
+              │ responseAgent    │
+              │ 누적 조건 반영   │
+              │ 자연어 응답 생성 │
+              └──────────────────┘
+```
+
+| Agent | 주요 입력 | 출력 |
+|-------|----------|------|
+| Intent | message | intent 레이블 |
+| Parser | message | 구조화된 키워드 객체 |
+| Planner | intent | 실행 전략 + 사용 Agent 플래그 |
+| Weather | temperature | 계절·추천 서브카테고리·가이드 문구 |
+| BodyType | bodyType | 선호 서브카테고리·색상 힌트·설명 문구 |
+| Style | message, parsed, bodyTypeCtx | 슬롯 목록 (상의/하의/신발/가방) |
+| Retrieval | parsed, plan, context | 슬롯별 MongoDB 검색 결과 |
+| Ranking | candidates, parsed | 점수 정렬된 후보 목록 |
+| Validation | ranked, parsed, slots | 검증 통과 상품 + 폴백 여부 |
+| Response | validationResult, parsed, context | `{ text, products }` |
+
+**다중 턴 컨텍스트 누적 예시**
+
+```
+① "23도 날씨 코디 추천해줘"
+   → lastContext: { temperature: 23, intent: WEATHER_COORDINATION }
+
+② "바지도 추천해줘"  (후속 감지 → merge)
+   → lastContext: { temperature: 23,
+                    allowedSubCategories: ['슬랙스','데님','반바지','와이드 팬츠'],
+                    excludedSubCategories: ['스커트'] }
+
+③ "통통한 체형 코디는?"  (후속 감지 → merge)
+   → merged: { temperature: 23, allowedSubCategories: [...], bodyType: '통통' }
+   → 응답: "앞서 말씀하신 23도 날씨 기준으로, 바지 코디에 통통한 체형 커버 조건까지 반영해 추천드릴게요 😊"
+```
+
+---
+
+## 6. 프로젝트 진화 경로
+
+```
+[1단계] 초기 구현
+  단일 함수 룰베이스 추천
+  → parseChatQuery + recommendProducts (로컬 필터)
+
+[2단계] RAG + SQLite
+  SQLite DB에서 상품 검색
+  → 색상·카테고리 필터, 추천 이유(reason) UI 추가
+  → 서브카테고리 strict 필터 도입
+
+[3단계] Agent 파이프라인 + MongoDB
+  better-sqlite3 → MongoDB(Mongoose) 마이그레이션
+  10-Agent 순차 파이프라인 구현
+  → 체형 Intent 개선, 장바구니 빈 상태 처리
+
+[4단계] 다중 턴 대화 컨텍스트
+  lastContext 프론트엔드 세션 보관
+  → 바지/스커트 필터 분리 (allowedSubCategories / excludedSubCategories)
+  → isFollowUpMessage 재설계: 명시적 마커 + 스레드 유무 판별
+  → 코디 슬롯별 필터 격리, 누적 조건 응답 텍스트 반영
+```
+
+---
+
+## 7. 기술 스택
 
 **Frontend**
 - React 19 · React Router v7
@@ -38,35 +212,7 @@ React + Express 기반의 풀스택 쇼핑몰 포트폴리오 프로젝트입니
 
 ---
 
-## AI 챗봇 아키텍처
-
-사용자 메시지를 10개의 Agent가 순차 처리하는 파이프라인 구조입니다.
-
-```
-Intent → Parser → Planner → Weather → BodyType → Style
-      → Retrieval → Ranking → Validation → Response
-```
-
-| Agent | 역할 |
-|-------|------|
-| Intent | 메시지 의도 분류 (상품/코디/날씨/장바구니/일반) |
-| Parser | 키워드 추출 (카테고리·색상·가격·체형·기온·바지/스커트 구분) |
-| Planner | 전략 수립 (hybrid / coordination / weather / cart / general) |
-| Weather | 기온 기반 계절·추천 아이템 도출 |
-| BodyType | 체형별 보완 코디 힌트 생성 |
-| Style | 스타일 슬롯 구성 (상의·하의·신발·가방 조합) |
-| Retrieval | MongoDB 검색 (슬롯별 격리 필터 적용) |
-| Ranking | 조건 일치도·평점 기반 재랭킹 |
-| Validation | 슬롯별 결과 검증 및 폴백 처리 |
-| Response | 누적 컨텍스트 반영 자연어 응답 생성 |
-
-**다중 턴 대화 컨텍스트**  
-`lastContext`를 프론트엔드에서 세션 단위로 유지하며 매 요청에 전달합니다.  
-후속 질문을 자동 감지해 이전 조건(기온·바지 필터·체형 등)을 누적·병합합니다.
-
----
-
-## 시작하기
+## 8. 실행 방법
 
 ### Docker로 실행 (권장)
 
@@ -76,13 +222,12 @@ docker compose up --build
 
 브라우저에서 http://localhost:8080 접속
 
-> MongoDB 컨테이너 (`mongo`)가 healthy 상태가 된 뒤 API 서버가 시작됩니다.
+> MongoDB 컨테이너가 healthy 상태가 된 뒤 API 서버가 시작됩니다.
 
-**Docker에서 챗봇·API가 안 될 때**
+**API가 응답하지 않을 때**
 
-- 프론트는 **같은 주소의** `/api/...`(상대 경로)로 호출합니다. `web` 이미지 빌드 시 `VITE_API_URL`을 비워 두므로, 브라우저는 `http://(접속한 호스트):8080/api/...` → Nginx → `api:4000` 으로 전달됩니다.
-- **절대** 빌드에 `VITE_API_URL=http://localhost:4000` 처럼 넣지 마세요. 다른 PC나 `http://192.168.x.x:8080`으로 접속하면 브라우저의 `localhost`는 그 PC 자신을 가리켜 API가 열리지 않습니다.
-- LAN IP로 접속하면서 API를 **직접** `:4000`에 붙이는 설정을 쓰는 경우에만, `api` 서비스의 `CORS_ORIGIN`에 해당 Origin을 추가하세요. (`docker-compose.yml` 주석 참고)
+- 프론트는 같은 호스트의 `/api/...` (상대 경로)로 호출합니다. 빌드 시 `VITE_API_URL`을 비워 두므로, 브라우저는 `http://(접속 호스트):8080/api/...` → Nginx → `api:4000` 으로 전달됩니다.
+- `VITE_API_URL=http://localhost:4000` 처럼 절대 경로를 넣으면 LAN 환경에서 동작하지 않습니다.
 
 ### 로컬 개발 서버
 
@@ -91,19 +236,29 @@ docker compose up --build
 npm install
 cd server && npm install && cd ..
 
-# MongoDB 실행 (Docker 또는 로컬 설치)
+# MongoDB 실행
 docker compose up mongo -d
+
+# 환경 변수 설정
+cp .env.example .env
+cp server/.env.example server/.env
 
 # 프론트 + 백 동시 실행
 npm run dev:all
 ```
 
-- 프론트엔드: http://localhost:5173  
+- 프론트엔드: http://localhost:5173
 - API 서버: http://localhost:4000
 
----
+**환경 변수**
 
-## 관리자 계정
+| 변수 | 설명 |
+|------|------|
+| `JWT_SECRET` | JWT 서명 키 |
+| `MONGODB_URI` | MongoDB 연결 URI (기본: `mongodb://localhost:27017/shopping-mall`) |
+| `CORS_ORIGIN` | 허용할 Origin (쉼표 구분) |
+
+### 관리자 계정
 
 | 항목 | 값 |
 |------|----|
@@ -112,75 +267,14 @@ npm run dev:all
 
 ---
 
-## 프로젝트 구조
-
-```
-shopping-mall/
-├── src/                  # React 프론트엔드
-│   ├── pages/            # 라우트별 페이지 컴포넌트
-│   ├── components/       # 공통 UI 컴포넌트
-│   │   ├── chatbot/      # AI 챗봇 패널 (ChatbotPanel, ChatbotHeader)
-│   │   ├── recommendation/ # 상품 추천
-│   │   └── admin/        # 관리자 UI
-│   ├── context/          # React Context (장바구니·인증·챗봇)
-│   ├── hooks/            # 커스텀 훅
-│   ├── services/         # API 호출 함수
-│   └── utils/            # 이미지 폴백 등 유틸
-├── server/
-│   ├── src/
-│   │   ├── agents/       # 10개 Agent 모듈 (intent/parser/planner/…/response)
-│   │   ├── chatbot/      # keyword parser, intent classifier, search/ranking service
-│   │   ├── services/     # chatbotWorkflow 오케스트레이터
-│   │   └── routes/       # Express 라우터
-│   └── data/             # 시드 데이터
-├── public/images/        # 상품 이미지 (JPG)
-├── docker/               # Dockerfile (api / web)
-└── docker-compose.yml
-```
-
----
-
-## 환경 변수
-
-`.env.example`을 복사해 `.env`를 생성하세요.
-
-```bash
-cp .env.example .env
-cp server/.env.example server/.env
-```
-
-| 변수 | 설명 |
-|------|------|
-| `JWT_SECRET` | JWT 서명 키 |
-| `MONGODB_URI` | MongoDB 연결 URI (기본: `mongodb://localhost:27017/shopping-mall`) |
-| `CORS_ORIGIN` | 허용할 Origin (쉼표 구분) |
-
----
-
-## AI 챗봇 질의 예시
-
-**단일 질문**
-- `베이지 슬랙스 추천해줘` → 상품 필터 + 상품별 추천 이유
-- `통통한 체형인데 코디 추천해줘` → 체형 보완 코디 설명
-- `23도의 날씨인데 추천룩은?` → 기온대별 코디·상품 추천
-- `장바구니에 담은 옷에 어울리는 코디 추천` → 장바구니 연관 추천
-
-**다중 턴 (누적 컨텍스트)**
-- `23도 날씨 코디 추천해줘` → `바지도 추천해줘` → `통통한 체형 코디는?`  
-  → 기온 23도 + 바지 필터 + 체형 커버 조건이 모두 누적되어 반영됨
-
----
-
 ## Docker 트러블슈팅
 
 - 코드 수정 후 반영이 안 보이면: `docker compose up --build`
-- BuildKit snapshot 에러(`parent snapshot ... does not exist`)가 나면:
+- MongoDB 연결 실패(`ECONNREFUSED 27017`): `docker compose up mongo -d` 로 먼저 실행
+- BuildKit snapshot 에러 시:
 
 ```bash
 docker builder prune -af
 docker compose build --no-cache
 docker compose up
 ```
-
-- MongoDB 연결 실패 시 (`ECONNREFUSED 127.0.0.1:27017`):  
-  `docker compose up mongo -d` 로 MongoDB를 먼저 실행하세요.
