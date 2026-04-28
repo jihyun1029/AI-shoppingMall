@@ -30,7 +30,7 @@ export function isValidSubCategory(categoryCode, subCategory) {
 export function toColorObjects(colorList) {
   return colorList.map((name) => {
     const hex = COLOR_PRESET[name] ?? fallbackColor(name)
-    return { id: slugBrand(name), name, hex }
+    return { id: name.trim().toLowerCase(), name, hex }
   })
 }
 
