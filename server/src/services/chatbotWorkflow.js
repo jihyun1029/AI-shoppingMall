@@ -78,11 +78,12 @@ export async function runWorkflow(message, opts = {}) {
     weatherCtx,
     bodyTypeCtx,
   }
-  const { candidates, slotResults, usedFallback } = await retrievalAgent(parsed, plan, context)
+  const { candidates, slotResults, usedFallback, cartEmpty = false } = await retrievalAgent(parsed, plan, context)
   trace.retrieval = {
     candidateCount: candidates.length,
     slotCount: slotResults?.length ?? null,
     usedFallback,
+    cartEmpty,
   }
 
   // Step 8: 재랭킹
@@ -102,7 +103,7 @@ export async function runWorkflow(message, opts = {}) {
     validationResult,
     parsed,
     plan,
-    { weatherCtx, bodyTypeCtx, styleCtx },
+    { weatherCtx, bodyTypeCtx, styleCtx, cartEmpty },
     message,
     usedFallback,
   )

@@ -73,6 +73,15 @@ export function classifyIntent(message) {
     scores[INTENT.PRODUCT_RECOMMEND] += 35
   }
 
+  // 체형 키워드 + 옷/스타일 관련 질문 → 코디 추천으로 처리
+  const hasBodyType =
+    /마른|통통|키\s*작은|키\s*큰|상체\s*통통|하체\s*통통|어깨\s*넓은|골반\s*넓은|체형\s*커버|아담|왜소|장신/.test(n)
+  const hasClothingContext =
+    /뭐\s*입|어떤\s*옷|어떻게\s*입|어울리는\s*옷|코디|스타일|옷\s*추천|입을|입기|옷/.test(n)
+  if (hasBodyType && hasClothingContext) {
+    scores[INTENT.COORDINATION_RECOMMEND] += 90
+  }
+
   const tieBreak = [
     INTENT.CART_RECOMMEND,
     INTENT.WEATHER_COORDINATION,

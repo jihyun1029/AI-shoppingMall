@@ -48,14 +48,21 @@ export function responseAgent(validationResult, parsed, plan, context, message, 
 
   // 장바구니 추천
   if (strategy === 'cart') {
+    if (context.cartEmpty) {
+      return {
+        text: '장바구니에 담긴 상품이 없어요 😊 먼저 마음에 드는 상품을 담아주시면, 그에 맞는 코디를 추천해드릴게요!',
+        products: [],
+      }
+    }
     const finalRanked = rerank(valid, parsed)
     const products = assignRecommendReasons(
       finalRanked.slice(0, FINAL_N).map(rowToApiProduct),
       parsed,
       message,
     )
-    const text =
-      products.length > 0
+    const text = usedFallback
+      ? `장바구니 상품에 어울리는 코디를 찾지 못했어요 😢 조건을 조금 완화해서 추천드릴게요.`
+      : products.length > 0
         ? '담아두신 상품과 같은 무드의 카테고리에서 골라, 함께 입기 좋은 아이템을 추천드릴게요. 하의·신발·가방 위주로 맞춰봤어요 😊'
         : '장바구니와 어울리면서도 조건에 맞는 상품을 찾지 못했어요. 검색 조건을 조금 바꿔 볼까요?'
     return { text, products }

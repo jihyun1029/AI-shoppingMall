@@ -29,8 +29,16 @@ export async function retrievalAgent(parsed, plan, context) {
 
   if (strategy === 'cart') {
     const ids = (context.cartProductIds || []).map(String).filter(Boolean)
-    const candidates = await searchByCartContext(ids, parsed)
-    return { candidates, slotResults: null, usedFallback: false }
+    if (ids.length === 0) {
+      return { candidates: [], slotResults: null, usedFallback: false, cartEmpty: true }
+    }
+    let candidates = await searchByCartContext(ids, parsed)
+    let usedFallback = false
+    if (candidates.length === 0) {
+      candidates = await searchPopularFallback()
+      usedFallback = true
+    }
+    return { candidates, slotResults: null, usedFallback, cartEmpty: false }
   }
 
   if (strategy === 'coordination' || strategy === 'weather') {
