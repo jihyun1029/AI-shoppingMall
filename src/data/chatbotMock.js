@@ -1,5 +1,5 @@
 export const CHATBOT_WELCOME_MESSAGE =
-  '안녕하세요! 원하시는 스타일이나 상품을 말씀해주시면 추천해드릴게요.'
+  '안녕하세요 😊 어떤 상품을 찾고 계신가요?'
 
 export const CHATBOT_SUBTITLE = '원하는 스타일이나 상품을 입력해보세요'
 

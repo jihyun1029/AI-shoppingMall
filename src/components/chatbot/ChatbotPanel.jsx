@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useChatbot } from '../../hooks/useChatbot'
 import { CHATBOT_WELCOME_MESSAGE } from '../../data/chatbotMock'
 import { ChatbotHeader } from './ChatbotHeader.jsx'
@@ -27,17 +27,13 @@ export function ChatbotPanel() {
     sendUserMessage,
     clearConversation,
     productById,
-    products,
     toast,
     showToast,
+    resetVersion,
   } = useChatbot()
   const scrollRef = useRef(null)
   const [draft, setDraft] = useState('')
   const hasMessages = messages.length > 0
-  const previewProducts = useMemo(
-    () => attachLocalReasons(products.slice(0, 3), '인기 상품을 둘러보고 있어요'),
-    [products],
-  )
 
   const handleSend = (text) => {
     sendUserMessage(text)
@@ -72,6 +68,10 @@ export function ChatbotPanel() {
     }
   }, [open])
 
+  useEffect(() => {
+    setDraft('')
+  }, [resetVersion])
+
   if (!open) return null
 
   return (
@@ -91,7 +91,7 @@ export function ChatbotPanel() {
 
         <div ref={scrollRef} className="min-h-0 min-w-0 flex-1 space-y-3 overflow-x-hidden overflow-y-auto px-3 py-3 sm:px-4">
           {!hasMessages ? (
-            <ChatMessage role="assistant" content={CHATBOT_WELCOME_MESSAGE} products={previewProducts} onAdded={() => showToast('장바구니에 담았어요.')} />
+            <ChatMessage role="assistant" content={CHATBOT_WELCOME_MESSAGE} products={[]} onAdded={() => showToast('장바구니에 담았어요.')} />
           ) : null}
           {messages.map((m, msgIndex) => {
             const storedQ = typeof m.userQuery === 'string' ? m.userQuery.trim() : ''

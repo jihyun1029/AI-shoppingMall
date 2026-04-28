@@ -1,6 +1,12 @@
 import { preferredSubCategoriesForBodyType } from '../chatbot/keywordParser.js'
 
 const BODY_TYPE_GUIDES = {
+  보통: {
+    mention: '보통 체형 기준으로',
+    explain: '상의는 살짝 여유 있고 하의는 스트레이트/세미와이드 실루엣으로 맞추면 전체 균형을 깔끔하게 유지하기 좋아요.',
+    colorHints: [],
+    styleHints: ['스트레이트', '세미와이드', '레이어드'],
+  },
   '상체통통': {
     mention: '상체가 도드라지는 체형을 고려해',
     explain: '어깨선이 부드러운 루즈핏 상의와 세로로 떨어지는 하의를 매치하면 상체 부담을 줄이기 좋아요.',

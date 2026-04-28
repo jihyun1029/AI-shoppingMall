@@ -9,53 +9,193 @@ import { rankingAgent } from '../agents/rankingAgent.js'
 import { validationAgent } from '../agents/validationAgent.js'
 import { responseAgent } from '../agents/responseAgent.js'
 import { weatherSlotsForTemp } from '../agents/styleAgent.js'
+import { INTENT } from '../chatbot/intentClassifier.js'
+import { buildAgentKeywords } from '../chatbot/keywordParser.js'
 
 function norm(s) {
   return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim()
 }
 
-/**
- * 후속 질문 판별: 짧거나 명시적 수정 마커가 있으면 true.
- * @param {string} message
- * @param {ReturnType<import('../chatbot/keywordParser.js').parseRagKeywords>} parsed
- */
-function isFollowUp(message, parsed) {
+function hasConversationThread(lastContext) {
+  if (!lastContext || typeof lastContext !== 'object') return false
+  return Boolean(
+    lastContext.temperature != null ||
+      lastContext.bodyType ||
+      (Array.isArray(lastContext.allowedSubCategories) && lastContext.allowedSubCategories.length > 0) ||
+      (Array.isArray(lastContext.excludedSubCategories) && lastContext.excludedSubCategories.length > 0) ||
+      (typeof lastContext.intent === 'string' &&
+        (lastContext.intent.includes('COORDINATION') || lastContext.intent === INTENT.WEATHER_COORDINATION)),
+  )
+}
+
+/** 완전히 새 상품 검색으로 보이면 컨텍스트 머지·의도 고정을 하지 않음 */
+function isFreshProductQuery(message, rawParsed, lastContext) {
+  if (!lastContext) return false
   const n = norm(message)
-  // 명시적 수정 마커
-  if (/말고|제외|빼고|대신|다른\s*(색|색상)|더\s*(저렴|비싼)|추가로|바꿔/.test(n)) return true
-  // 짧고 독립적 컨텍스트가 없는 경우
-  if (n.length <= 20 && !parsed.weatherQuery && !parsed.bodyType) return true
+  if (/처음부터|리셋|새\s*질문|다른\s*건으로|상품만\s*찾아/.test(n)) return true
+  const productish =
+    (rawParsed.strictSubCategory || (rawParsed.categories || []).length > 0) &&
+    (rawParsed.colors || []).length > 0 &&
+    !/(코디|룩|날씨|기온|체형|통통|바지|팬츠|스커트|하의|도\s*\d)/.test(n)
+  return productish
+}
+
+function isExplicitFollowUpMarker(message) {
+  const n = norm(message)
+  return /그럼|이면\??|라면\??|그\s*기준으로|이\s*조건(이면|으로)?|바지(도|로)?|다른\s*것도|말고|제외|빼고|대신|추가로|바꿔/.test(n)
+}
+
+/** 완전한 재요청 문장은 새 질문으로 처리 */
+function isExplicitNewRequest(message) {
+  const n = norm(message)
+  if (isExplicitFollowUpMarker(n)) return false
+  return /(추천해줘|코디\s*추천해줘|코디\s*추천|보여줘|골라줘|찾아줘|알려줘)/.test(n)
+}
+
+/**
+ * 후속 질문: 이전 스레드가 있고, 새 질문이 맥락을 이어가는 경우.
+ * @param {string} message
+ * @param {ReturnType<import('../chatbot/keywordParser.js').parseRagKeywords>} rawParsed
+ * @param {object | null} lastContext
+ */
+function isFollowUpMessage(message, rawParsed, lastContext) {
+  if (!hasConversationThread(lastContext)) return false
+  if (isFreshProductQuery(message, rawParsed, lastContext)) return false
+
+  const n = norm(message)
+  if (isExplicitNewRequest(n)) return false
+
+  if (
+    /바지(도|로|는)?\s*(추천|보여|골라|알려)|스커트\s*(말고|제외|빼고)|(말고|제외|빼고)\s*스커트|통통한\s*체형|체형\s*코디|이\s*조건(이면|으로)?|그\s*기준으로|다른\s*것도(\s*보여)?|말고|제외|빼고|대신|바꿔|추가로/.test(
+      n,
+    )
+  ) {
+    return true
+  }
+
+  if (/(그럼\s*)?\d{1,2}\s*도(의)?\s*날씨(인데|면|엔)?|날씨는?\s*\d{1,2}\s*도(야|인데)?|기온(은|이)?\s*\d{1,2}\s*도(야|인데)?/.test(n)) {
+    return true
+  }
+
+  // 짧은 온도 질문(예: "그럼 23도는?", "23도면?")만 후속 처리
+  if (/^(그럼\s*)?\d{1,2}\s*도(면|는|엔)?\??$/.test(n) || /^\d{1,2}\s*도(면|는)\??$/.test(n)) return true
+
+  if (
+    lastContext.temperature != null &&
+    /(코디|룩|추천|체형|통통|마른|키\s*작|키\s*큰|바지|팬츠|스커트|하의|상의|신발|가방|어울|입을|매치|입기)/.test(n)
+  ) {
+    return true
+  }
+
+  if (
+    ((lastContext.allowedSubCategories || []).length > 0 || (lastContext.excludedSubCategories || []).length > 0) &&
+    rawParsed.temperature == null &&
+    /(코디|추천|체형|통통|보여|골라)/.test(n)
+  ) {
+    return true
+  }
+
+  if (n.length <= 40 && rawParsed.temperature == null && !/^\d{1,2}\s*도/.test(n)) {
+    const clothingish = /(코디|룩|옷|추천|체형|입|바지|치마|스커트|신발|가방|상의|하의|핏|매치|어울|보여|골라|통통|마른|색|컬러)/.test(n)
+    if (
+      clothingish &&
+      (lastContext.temperature != null ||
+        (lastContext.allowedSubCategories || []).length ||
+        (lastContext.excludedSubCategories || []).length ||
+        lastContext.bodyType)
+    ) {
+      return true
+    }
+  }
+
+  return false
+}
+
+/** 새 메시지에서 스커트·치마를 긍정적으로 요청하면 이전 바지 한정 필터는 상속하지 않음 */
+function shouldDropInheritedPantsFilter(message, parsed) {
+  const n = norm(message)
+  if (/(말고|제외|빼고)\s*스커트|스커트\s*(말고|제외|빼고)/.test(n)) return false
+  if (parsed.strictSubCategory === '스커트') return true
+  if (/(스커트|치마)(으로|로|는|를|\s*추천|\s*코디|\s*입)/.test(n)) return true
   return false
 }
 
 /**
- * 이전 대화 컨텍스트와 현재 parsed를 병합.
- * 현재 메시지가 명시한 값이 있으면 우선, 없으면 lastContext 값 사용.
- * excludedSubCategories는 누적(합집합).
+ * 이전 대화 컨텍스트와 현재 parsed 병합.
+ * 명시된 값이 새 메시지에 있으면 우선, 없으면 lastContext 유지.
+ * excludedSubCategories는 합집합.
  */
-function mergeWithLastContext(parsed, lastContext) {
-  if (!lastContext) return parsed
-  return {
-    ...parsed,
-    temperature: parsed.temperature ?? lastContext.temperature ?? null,
-    weatherQuery: parsed.weatherQuery || Boolean(lastContext.temperature),
-    styleKeyword: parsed.styleKeyword ?? lastContext.styleKeyword ?? null,
-    bodyType: parsed.bodyType ?? lastContext.bodyType ?? null,
-    colors: parsed.colors.length > 0 ? parsed.colors : (lastContext.colors || []),
-    color: parsed.color ?? lastContext.color ?? null,
-    colorLabel: parsed.colorLabel ?? lastContext.colorLabel ?? null,
-    minPrice: parsed.minPrice ?? lastContext.minPrice ?? null,
-    minPriceOp: parsed.minPriceOp ?? lastContext.minPriceOp ?? null,
-    maxPrice: parsed.maxPrice ?? lastContext.maxPrice ?? null,
-    maxPriceOp: parsed.maxPriceOp ?? lastContext.maxPriceOp ?? null,
-    // 제외 목록은 누적
-    excludedSubCategories: [
-      ...new Set([
-        ...(parsed.excludedSubCategories || []),
-        ...(lastContext.excludedSubCategories || []),
-      ]),
-    ],
+function mergeWithLastContext(message, parsed, lastContext) {
+  if (!lastContext) {
+    return {
+      ...parsed,
+      weatherQuery: parsed.weatherQuery || parsed.temperature != null,
+    }
   }
+  const lc = lastContext
+  const temperature = parsed.temperature ?? lc.temperature ?? null
+  const weatherQuery = parsed.weatherQuery || temperature != null
+
+  const rawAllow = parsed.allowedSubCategories || []
+  const lastAllow = lc.allowedSubCategories || []
+  const dropPants = shouldDropInheritedPantsFilter(message, parsed)
+  const allowedSubCategories = dropPants
+    ? [...rawAllow]
+    : rawAllow.length
+      ? [...rawAllow]
+      : [...lastAllow]
+
+  let categories = [...(parsed.categories || [])]
+  if (categories.length === 0 && Array.isArray(lc.categories) && lc.categories.length) {
+    categories = [...lc.categories]
+  }
+
+  const strictSubCategory = parsed.strictSubCategory ?? lc.strictSubCategory ?? lc.subCategory ?? null
+  const mergedBodyType = parsed.bodyType ?? lc.bodyType ?? null
+
+  const mergedContext = {
+    ...parsed,
+    temperature,
+    weatherQuery,
+    categories,
+    strictSubCategory,
+    styleKeyword: parsed.styleKeyword ?? lc.styleKeyword ?? lc.style ?? null,
+    bodyType: mergedBodyType,
+    colors: (parsed.colors || []).length > 0 ? parsed.colors : lc.colors || [],
+    color: parsed.color ?? lc.color ?? null,
+    colorLabel: parsed.colorLabel ?? lc.colorLabel ?? null,
+    minPrice: parsed.minPrice ?? lc.minPrice ?? null,
+    minPriceOp: parsed.minPriceOp ?? lc.minPriceOp ?? null,
+    maxPrice: parsed.maxPrice ?? lc.maxPrice ?? null,
+    maxPriceOp: parsed.maxPriceOp ?? lc.maxPriceOp ?? null,
+    allowedSubCategories,
+    excludedSubCategories: dropPants
+      ? [...new Set([...(parsed.excludedSubCategories || [])])]
+      : [...new Set([...(parsed.excludedSubCategories || []), ...(lc.excludedSubCategories || [])])],
+  }
+
+  // bodyType은 누적이 아닌 교체 조건: 새 값이 있으면 항상 최신 값으로 강제 반영.
+  if (parsed.bodyType) {
+    mergedContext.bodyType = parsed.bodyType
+  }
+
+  console.log({
+    previousBodyType: lc.bodyType ?? null,
+    newBodyType: parsed.bodyType ?? null,
+    finalBodyType: mergedContext.bodyType ?? null,
+  })
+
+  return mergedContext
+}
+
+function resolveIntentAfterMerge(intent, followUp, parsed, lastContext) {
+  if (parsed.temperature != null) return INTENT.WEATHER_COORDINATION
+  if (parsed.bodyType && parsed.temperature == null) return INTENT.COORDINATION_RECOMMEND
+  if (!followUp || !lastContext) return intent
+  if (intent === INTENT.CART_RECOMMEND || intent === INTENT.GENERAL_INFO) return intent
+  const hadWeather = lastContext.temperature != null || lastContext.intent === INTENT.WEATHER_COORDINATION
+  if (hadWeather && parsed.temperature != null) return INTENT.WEATHER_COORDINATION
+  return intent
 }
 
 /**
@@ -88,28 +228,28 @@ export async function runWorkflow(message, opts = {}) {
   const trace = {}
 
   // Step 1: Intent 분류
-  const { intent, scores } = intentAgent(message)
+  let { intent, scores } = intentAgent(message)
   trace.intent = { intent, scores }
 
   // Step 2: 키워드 파싱
-  const { parsed: rawParsed, keywords: rawKeywords } = parserAgent(message)
+  const { parsed: rawParsed } = parserAgent(message)
   trace.parser = rawParsed
 
   // Step 3: 이전 대화 컨텍스트 병합
-  const followUp = isFollowUp(message, rawParsed)
-  const parsed = followUp ? mergeWithLastContext(rawParsed, opts.lastContext) : rawParsed
-  const keywords = followUp ? { ...rawKeywords, allowedSubCategories: parsed.allowedSubCategories, excludedSubCategories: parsed.excludedSubCategories } : rawKeywords
-  trace.contextMerge = { followUp, lastContext: opts.lastContext ?? null }
-
-  console.log('[workflow debug]', {
-    message,
-    lastContext: opts.lastContext,
+  const followUp = isFollowUpMessage(message, rawParsed, opts.lastContext)
+  const parsed = followUp
+    ? mergeWithLastContext(message, rawParsed, opts.lastContext)
+    : mergeWithLastContext(message, rawParsed, null)
+  intent = resolveIntentAfterMerge(intent, followUp, parsed, opts.lastContext)
+  trace.intent = { intent, scores, afterMerge: intent }
+  trace.contextMerge = {
     followUp,
-    allowedSubCategories: parsed.allowedSubCategories,
-    excludedSubCategories: parsed.excludedSubCategories,
-    temperature: parsed.temperature,
-    styleKeyword: parsed.styleKeyword,
-  })
+    previousContext: opts.lastContext ?? null,
+    parsedContext: rawParsed,
+    mergedContext: parsed,
+  }
+
+  const keywords = buildAgentKeywords(message, parsed)
 
   // Step 4: 실행 전략
   const plan = plannerAgent(intent, parsed)
@@ -128,7 +268,7 @@ export async function runWorkflow(message, opts = {}) {
   if (plan.useStyle) {
     if (plan.strategy === 'weather' && weatherCtx) {
       const styleKey = parsed.styleKeyword || (/출근|오피스|미팅/.test(message) ? 'office' : 'daily')
-      const slots = weatherSlotsForTemp(weatherCtx.temperature, styleKey)
+      const slots = weatherSlotsForTemp(weatherCtx.temperature, styleKey, parsed)
       styleCtx = { styleKey, label: styleKey, slots }
     } else {
       styleCtx = styleAgent(message, parsed, bodyTypeCtx)
@@ -174,18 +314,21 @@ export async function runWorkflow(message, opts = {}) {
       styleCtx,
       cartEmpty,
       followUp,
-      contextTemperature: followUp ? (opts.lastContext?.temperature ?? null) : null,
+      contextTemperature: followUp && parsed.temperature != null ? parsed.temperature : null,
     },
     message,
     usedFallback,
   )
   trace.response = { productCount: products.length }
 
-  console.log('[workflow debug] finalProducts:', products.map((p) => ({
-    id: p.id,
-    name: p.name,
-    subCategory: p.subCategory,
-  })))
+  console.log({
+    message,
+    isFollowUp: followUp,
+    previousContext: opts.lastContext ?? null,
+    parsedContext: rawParsed,
+    mergedContext: parsed,
+    finalIntent: intent,
+  })
   console.log('[workflow] intent=%s strategy=%s followUp=%s products=%d', intent, plan.strategy, followUp, products.length)
 
   return { intent, keywords, text, products, trace }

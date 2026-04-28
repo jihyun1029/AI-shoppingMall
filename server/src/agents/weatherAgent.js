@@ -3,9 +3,17 @@
  * @param {ReturnType<import('../chatbot/keywordParser.js').parseRagKeywords>} parsed
  * @returns {{ temperature: number, season: string, guide: string, recommendedSubs: string[] } | null}
  */
+function isPantsOnlyWeather(parsed) {
+  const ex = parsed?.excludedSubCategories || []
+  const allow = parsed?.allowedSubCategories || []
+  return ex.includes('스커트') || (allow.length > 0 && !allow.includes('스커트'))
+}
+
 export function weatherAgent(parsed) {
   const temp = parsed.temperature
   if (temp == null) return null
+
+  const pantsOnly = isPantsOnlyWeather(parsed)
 
   let season
   if (temp >= 28) season = '여름'
@@ -20,8 +28,12 @@ export function weatherAgent(parsed) {
     recommendedSubs = ['반팔티', '반바지', '미니 원피스', '스니커즈', '숄더백']
     guide = `${temp}도 날씨에는 통기성이 좋은 반팔티나 얇은 원피스에 가벼운 하의를 매치하면 좋아요 😊 강한 햇볕을 고려해 너무 답답한 소재는 피하는 것을 추천드려요.`
   } else if (temp >= 23) {
-    recommendedSubs = ['반팔티', '블라우스', '셔츠', '스커트', '데님', '가디건']
-    guide = `${temp}도 날씨에는 너무 두껍지 않은 블라우스나 얇은 셔츠에 데님 또는 스커트를 매치하면 좋아요 😊 가볍게 걸칠 가디건을 함께 보면 아침저녁 기온차에도 대응하기 좋아요.`
+    recommendedSubs = pantsOnly
+      ? ['반팔티', '블라우스', '셔츠', '데님', '슬랙스', '가디건']
+      : ['반팔티', '블라우스', '셔츠', '스커트', '데님', '가디건']
+    guide = pantsOnly
+      ? `${temp}도 날씨에는 너무 두껍지 않은 블라우스나 얇은 셔츠에 슬랙스·데님 같은 바지 실루엣을 매치하면 좋아요 😊 가볍게 걸칠 가디건을 함께 보면 아침저녁 기온차에도 대응하기 좋아요.`
+      : `${temp}도 날씨에는 너무 두껍지 않은 블라우스나 얇은 셔츠에 데님 또는 스커트를 매치하면 좋아요 😊 가볍게 걸칠 가디건을 함께 보면 아침저녁 기온차에도 대응하기 좋아요.`
   } else if (temp >= 18) {
     recommendedSubs = ['셔츠', '니트', '가디건', '슬랙스', '데님']
     guide = `${temp}도에는 셔츠·니트에 슬랙스나 데님을 매치한 레이어드 코디가 잘 맞아요 😊 얇은 가디건을 더하면 실내외 온도 차에 대응하기 좋아요.`

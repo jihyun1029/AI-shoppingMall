@@ -16,11 +16,13 @@ export async function validationAgent(ranked, rankedSlots, parsed, opts = {}) {
     const validSlots = []
     let totalDropped = 0
     for (const { slot, rows } of rankedSlots) {
+      const useAllowedBottom =
+        slot.category === 'bottom' && Array.isArray(parsed.allowedSubCategories) && parsed.allowedSubCategories.length > 0
       const slotF = {
         ...parsed,
         categories: [slot.category],
         subCategories: [slot.subCategory],
-        strictSubCategory: slot.subCategory,
+        strictSubCategory: useAllowedBottom ? null : slot.subCategory,
       }
       const { rows: valid, meta } = await validateCandidates(rows.slice(0, 6), slotF)
       totalDropped += meta.droppedCount

@@ -45,11 +45,13 @@ export async function retrievalAgent(parsed, plan, context) {
     const slots = context.styleCtx?.slots || []
     const slotResults = []
     for (const slot of slots) {
+      const useAllowedBottom =
+        slot.category === 'bottom' && Array.isArray(parsed.allowedSubCategories) && parsed.allowedSubCategories.length > 0
       const f = {
         ...parsed,
         categories: [slot.category],
         subCategories: [slot.subCategory],
-        strictSubCategory: slot.subCategory,
+        strictSubCategory: useAllowedBottom ? null : slot.subCategory,
       }
       const rows = await keywordStructuredSearch(f)
       const ok = filterByHardConstraints(rows, f)
@@ -71,6 +73,27 @@ export async function retrievalAgent(parsed, plan, context) {
   candidates = filterByHardConstraints(candidates, parsed)
 
   let usedFallback = false
+  // 결과가 1~2개면 일부 조건을 완화해 후보 풀을 확장
+  if (candidates.length > 0 && candidates.length < 3) {
+    const relaxed = {
+      ...parsed,
+      strictSubCategory: null,
+      colors: [],
+      color: null,
+      colorLabel: null,
+    }
+    const [moreConstrained, moreRelaxed] = await Promise.all([
+      searchConstrainedFallback(relaxed),
+      searchRelaxedBlob(relaxed),
+    ])
+    const merged = new Map(candidates.map((r) => [r.id, r]))
+    for (const row of [...moreConstrained, ...moreRelaxed]) {
+      if (row?.id != null && !merged.has(row.id)) merged.set(row.id, row)
+    }
+    candidates = [...merged.values()]
+    usedFallback = true
+  }
+
   if (candidates.length === 0 && !parsed.colors?.length && !parsed.strictSubCategory) {
     const constrained = await searchConstrainedFallback(parsed)
     if (constrained.length > 0) {

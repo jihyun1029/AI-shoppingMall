@@ -4,6 +4,67 @@ import { answerGeneralInfo } from '../chatbot/generalInfoService.js'
 import { rerank } from '../chatbot/rankingService.js'
 
 const FINAL_N = 5
+const MIN_N = 3
+
+function logDiversity(filteredCount, selectedProducts, diversityApplied) {
+  console.log({
+    filteredCount,
+    selectedProducts: selectedProducts.map((p) => ({
+      id: p.id,
+      name: p.name,
+      subCategory: p.subCategory,
+    })),
+    diversityApplied,
+  })
+}
+
+function preferredSubCategoryOrder(parsed) {
+  const isPantsContext =
+    (parsed.allowedSubCategories || []).length > 0 ||
+    parsed.categories?.includes('bottom') ||
+    parsed.strictSubCategory === '슬랙스' ||
+    parsed.strictSubCategory === '데님' ||
+    parsed.strictSubCategory === '반바지'
+  if (!isPantsContext) return []
+  return ['슬랙스', '데님', '반바지', '크롭 팬츠']
+}
+
+function pickDiverseRows(rows, parsed, min = MIN_N, max = FINAL_N) {
+  const order = preferredSubCategoryOrder(parsed)
+  const selected = []
+  const seenIds = new Set()
+  const seenSubs = new Set()
+
+  const byIdPush = (row) => {
+    if (!row || seenIds.has(row.id)) return false
+    seenIds.add(row.id)
+    seenSubs.add(String(row.subCategory || ''))
+    selected.push(row)
+    return true
+  }
+
+  if (order.length > 0) {
+    for (const sub of order) {
+      const hit = rows.find((r) => !seenIds.has(r.id) && String(r.subCategory || '') === sub)
+      if (hit) byIdPush(hit)
+      if (selected.length >= max) break
+    }
+  }
+
+  for (const row of rows) {
+    if (selected.length >= max) break
+    const sub = String(row.subCategory || '')
+    if (!seenSubs.has(sub)) byIdPush(row)
+  }
+
+  for (const row of rows) {
+    if (selected.length >= max) break
+    byIdPush(row)
+  }
+
+  const diversityApplied = new Set(selected.map((r) => String(r.subCategory || ''))).size > 1
+  return { rows: selected.slice(0, max), diversityApplied, isInsufficient: selected.length < min }
+}
 
 function buildNoResultText(parsed) {
   const cw = parsed.colorLabel || parsed.color
@@ -55,11 +116,9 @@ export function responseAgent(validationResult, parsed, plan, context, message, 
       }
     }
     const finalRanked = rerank(valid, parsed)
-    const products = assignRecommendReasons(
-      finalRanked.slice(0, FINAL_N).map(rowToApiProduct),
-      parsed,
-      message,
-    )
+    const picked = pickDiverseRows(finalRanked, parsed)
+    const products = assignRecommendReasons(picked.rows.map(rowToApiProduct), parsed, message)
+    logDiversity(finalRanked.length, products, picked.diversityApplied)
     const text = usedFallback
       ? `장바구니 상품에 어울리는 코디를 찾지 못했어요 😢 조건을 조금 완화해서 추천드릴게요.`
       : products.length > 0
@@ -72,24 +131,77 @@ export function responseAgent(validationResult, parsed, plan, context, message, 
   if ((strategy === 'coordination' || strategy === 'weather') && validSlots) {
     const picked = []
     const seen = new Set()
+    const remained = []
     for (const { rows } of validSlots) {
       const row = rows[0]
       if (row && !seen.has(row.id)) {
         seen.add(row.id)
         picked.push(rowToApiProduct(row))
       }
+      for (const r of rows.slice(1)) {
+        if (!seen.has(r.id)) remained.push(r)
+      }
+    }
+    if (picked.length < MIN_N) {
+      const spareRows = remained.map(rowToApiProduct)
+      for (const p of spareRows) {
+        if (picked.length >= FINAL_N) break
+        if (seen.has(p.id)) continue
+        seen.add(p.id)
+        picked.push(p)
+      }
     }
 
     let text
     if (strategy === 'weather') {
       const baseGuide = context.weatherCtx?.guide || ''
+      const pantsHint =
+        (parsed.allowedSubCategories || []).length > 0 &&
+        (parsed.excludedSubCategories || []).includes('스커트')
+      const bodyWord =
+        parsed.bodyType === '통통'
+          ? '통통한 체형'
+          : parsed.bodyType === '마른'
+            ? '마른 체형'
+            : parsed.bodyType
+              ? `${parsed.bodyType} 체형`
+              : ''
+      const bodyConditionWord =
+        parsed.bodyType === '마른'
+          ? '마른 체형 조건'
+          : parsed.bodyType === '통통'
+            ? '통통한 체형 커버 조건'
+            : ''
+      let recap = ''
+      if (context.followUp && (parsed.temperature != null || pantsHint || bodyWord)) {
+        const tempSeg = parsed.temperature != null ? `${parsed.temperature}도 날씨 기준` : ''
+        if (tempSeg && pantsHint && bodyWord) {
+          recap = `앞서 말씀하신 ${tempSeg}으로, 바지 코디에 ${bodyWord} 커버 조건까지 함께 반영해 추천드릴게요 😊 `
+        } else if (tempSeg && pantsHint) {
+          recap = `앞서 말씀하신 ${tempSeg}으로 바지 코디 조건을 이어가며 추천드릴게요 😊 `
+        } else if (tempSeg && bodyWord) {
+          recap = `앞서 말씀하신 ${bodyConditionWord || bodyWord}에 ${tempSeg}을 함께 반영해서 추천드릴게요 😊 `
+        } else if (pantsHint && bodyWord) {
+          recap = `앞서 말씀하신 바지 코디에 ${bodyWord} 커버까지 반영해 추천드릴게요 😊 `
+        } else if (tempSeg) {
+          recap = `앞서 말씀하신 ${tempSeg}으로 조건을 이어가며 추천드릴게요 😊 `
+        } else if (pantsHint) {
+          recap = `앞서 말씀하신 바지 코디 조건을 이어가며 추천드릴게요 😊 `
+        } else if (bodyWord) {
+          recap = `앞서 말씀하신 ${bodyWord} 커버 조건을 반영해 추천드릴게요 😊 `
+        }
+      }
       if (picked.length > 0) {
         const styleKey = context.styleCtx?.styleKey
         const officeHint =
           styleKey === 'office' ? '출근룩으로 입는 경우에는 구두/로퍼와 단정한 가방을 보조로 매치하면 깔끔해요.' : ''
-        text = `${baseGuide} ${officeHint}`.trim()
+        const btTail =
+          context.bodyTypeCtx && picked.length > 0
+            ? ` ${context.bodyTypeCtx.explain}`.trim()
+            : ''
+        text = `${recap}${baseGuide} ${officeHint}${btTail}`.replace(/\s+/g, ' ').trim()
       } else {
-        text = `현재 기온 기준 정확히 맞는 조합이 적어 비슷한 계절감 상품을 찾기 어려웠어요. ${baseGuide}`
+        text = `${recap}현재 기온 기준 정확히 맞는 조합이 적어 비슷한 계절감 상품을 찾기 어려웠어요. ${baseGuide}`.trim()
       }
     } else {
       const styleName = context.styleCtx?.label || '코디'
@@ -104,15 +216,19 @@ export function responseAgent(validationResult, parsed, plan, context, message, 
           : `${styleName}에 맞는 조합을 찾기 어려워요. 색상이나 가격 조건을 완화해 보시겠어요?`
     }
 
-    const products = assignRecommendReasons(picked.slice(0, 6), parsed, message)
+    const diverse = pickDiverseRows(picked, parsed)
+    const products = assignRecommendReasons(diverse.rows, parsed, message)
+    logDiversity(picked.length, products, diverse.diversityApplied)
     return { text, products }
   }
 
   // 기본 hybrid: 상품 추천
   const finalRanked = rerank(valid, parsed)
-  const slice = finalRanked.slice(0, FINAL_N)
+  const diverse = pickDiverseRows(finalRanked, parsed)
+  const slice = diverse.rows
 
   if (slice.length === 0) {
+    logDiversity(finalRanked.length, [], false)
     return { text: buildNoResultText(parsed), products: [] }
   }
 
@@ -130,5 +246,6 @@ export function responseAgent(validationResult, parsed, plan, context, message, 
   }
 
   const products = assignRecommendReasons(rawProducts, parsed, message)
+  logDiversity(finalRanked.length, products, diverse.diversityApplied)
   return { text, products }
 }

@@ -33,6 +33,7 @@ const BODY_TYPE_PATTERNS = [
   { key: '하체통통', re: /하체\s*통통|허벅지\s*통통|종아리\s*통통|하체\s*커버/ },
   { key: '어깨넓은', re: /어깨\s*넓은|어깨가\s*넓/ },
   { key: '골반넓은', re: /골반\s*넓은|힙\s*넓은/ },
+  { key: '보통', re: /보통\s*체형|평균\s*체형|보통/ },
   { key: '통통', re: /통통|통통한|체형\s*커버|커버\s*핏|하체\s*커버|상체\s*커버/ },
   { key: '마른', re: /마른|마른\s*체형|왜소|말랐/ },
   { key: '키작은', re: /키\s*작은|작은\s*키|아담/ },
@@ -194,7 +195,7 @@ function parseTemperatureFromText(text) {
  *   cartAssist: boolean;
  *   rawTokens: string[];
  *   strictSubCategory: string | null;
- *   bodyType: '통통'|'마른'|'키작은'|'키큰'|'상체통통'|'하체통통'|'어깨넓은'|'골반넓은'|null;
+ *   bodyType: '보통'|'통통'|'마른'|'키작은'|'키큰'|'상체통통'|'하체통통'|'어깨넓은'|'골반넓은'|null;
  *   temperature: number | null;
  *   weatherQuery: boolean;
  * }}
@@ -249,7 +250,8 @@ export function parseRagKeywords(message) {
     strictSubCategory = strictBottom
   }
 
-  const PANTS_SUBS = ['슬랙스', '데님', '반바지', '와이드 팬츠']
+  /** DB subCategory와 일치 (와이드 팬츠 등 미등록 항목 제외) */
+  const PANTS_SUBS = ['슬랙스', '데님', '반바지']
   let allowedSubCategories = []
   let excludedSubCategories = []
 
@@ -347,6 +349,8 @@ export function buildAgentKeywords(message, parsed = null) {
 
 export function preferredSubCategoriesForBodyType(bodyType) {
   switch (bodyType) {
+    case '보통':
+      return ['셔츠', '니트', '가디건', '데님', '슬랙스']
     case '상체통통':
       return ['셔츠', '블라우스', '니트', '가디건', '슬랙스']
     case '하체통통':

@@ -80,18 +80,44 @@ export function styleAgent(message, parsed, bodyTypeCtx) {
   }
 }
 
+function wantsPantsOnly(parsed) {
+  if (!parsed) return false
+  const ex = parsed.excludedSubCategories || []
+  const allow = parsed.allowedSubCategories || []
+  if (ex.includes('스커트')) return true
+  if (allow.length && !allow.includes('스커트')) return true
+  return false
+}
+
+function pickWeatherBottom(temp, styleKey, parsed) {
+  const pantsOnly = wantsPantsOnly(parsed)
+  const allow = (parsed?.allowedSubCategories || []).filter(Boolean)
+  const pickFrom = (cands) => {
+    const pool = allow.length ? cands.filter((c) => allow.includes(c)) : cands
+    return pool[0] || cands[0]
+  }
+  if (pantsOnly) {
+    if (temp >= 28) return pickFrom(['반바지', '데님', '슬랙스'])
+    if (styleKey === 'office') return pickFrom(['슬랙스', '데님'])
+    return pickFrom(['데님', '슬랙스', '반바지'])
+  }
+  if (temp >= 28) return '반바지'
+  if (temp >= 23) return '스커트'
+  return '데님'
+}
+
 /**
- * 날씨 기온에 따른 슬롯 결정.
  * @param {number} temp
  * @param {string} styleKey
- * @returns {{ category: string, subCategory: string }[]}
+ * @param {import('../chatbot/keywordParser.js').parseRagKeywords | null} [parsed] 바지 전용·스커트 제외 시 하의 슬롯 조정
  */
-export function weatherSlotsForTemp(temp, styleKey) {
+export function weatherSlotsForTemp(temp, styleKey, parsed = null) {
   const hasOffice = styleKey === 'office'
   if (temp >= 23) {
+    const bottom = pickWeatherBottom(temp, styleKey, parsed)
     return [
       { category: 'top', subCategory: hasOffice ? '블라우스' : '셔츠' },
-      { category: 'bottom', subCategory: temp >= 28 ? '반바지' : (temp >= 23 ? '스커트' : '데님') },
+      { category: 'bottom', subCategory: bottom },
       { category: 'outer', subCategory: temp >= 28 ? '' : '가디건' },
     ].filter((x) => x.subCategory)
   }
