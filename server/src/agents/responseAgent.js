@@ -121,7 +121,12 @@ export function responseAgent(validationResult, parsed, plan, context, message, 
   if (usedFallback) {
     text = `조건에 맞는 후보가 적어, 인기·평점 순으로 ${rawProducts.length}건을 넓혀서 골랐어요. 말씀하신 서브카테고리·색과 다를 수 있으니 상품 설명을 함께 확인해 주세요 😊`
   } else {
-    text = generateOverallReplyIntro(rawProducts, parsed)
+    const baseText = generateOverallReplyIntro(rawProducts, parsed)
+    // 후속 질문 + 이전 대화에 기온 정보가 있으면 맥락 언급
+    const temp = context.followUp ? (context.contextTemperature ?? null) : null
+    text = temp != null
+      ? `앞서 말씀하신 ${temp}도 날씨 기준으로, ${baseText.replace(/^[A-Z가-힣]/, (c) => c.toLowerCase())}`
+      : baseText
   }
 
   const products = assignRecommendReasons(rawProducts, parsed, message)

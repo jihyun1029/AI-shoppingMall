@@ -15,6 +15,8 @@ function satisfiesHardConstraints(row, f) {
   if (f.minPrice != null && !Number.isNaN(f.minPrice) && salePrice < f.minPrice) return false
   if (f.colors?.length && !productMatchesColorTokens(r.colors, f.colors)) return false
   if (f.strictSubCategory && String(r.subCategory) !== String(f.strictSubCategory)) return false
+  if (f.allowedSubCategories?.length && !f.allowedSubCategories.includes(String(r.subCategory))) return false
+  if (f.excludedSubCategories?.length && f.excludedSubCategories.includes(String(r.subCategory))) return false
   return true
 }
 

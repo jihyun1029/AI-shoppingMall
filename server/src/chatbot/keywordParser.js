@@ -249,6 +249,28 @@ export function parseRagKeywords(message) {
     strictSubCategory = strictBottom
   }
 
+  const PANTS_SUBS = ['슬랙스', '데님', '반바지', '와이드 팬츠']
+  let allowedSubCategories = []
+  let excludedSubCategories = []
+
+  // "스커트 말고/제외/빼고" 먼저 감지
+  if (/스커트\s*(말고|제외|빼고|아니라|아닌)/.test(n) || /(말고|제외|빼고)\s*스커트/.test(n)) {
+    excludedSubCategories.push('스커트')
+  }
+
+  // strictSubCategory가 제외 대상이면 해소 (예: "스커트 말고 바지로")
+  if (strictSubCategory && excludedSubCategories.includes(strictSubCategory)) {
+    strictSubCategory = null
+    subCategories.length = 0
+  }
+
+  // "바지"/"팬츠": 팬츠 계열만 허용, 스커트 제외 (strictSubCategory 미설정 시에만)
+  if (/바지|팬츠/.test(n) && !strictSubCategory && !categories.includes('bag')) {
+    if (!categories.includes('bottom')) categories.push('bottom')
+    allowedSubCategories = PANTS_SUBS
+    if (!excludedSubCategories.includes('스커트')) excludedSubCategories.push('스커트')
+  }
+
   const colors = [...new Set(q.colorNames)]
   const colorLabel = colors.length ? pickColorLabelFromMessage(message) : null
   const color = colors.length ? canonicalColorKey(colors) : null
@@ -272,6 +294,8 @@ export function parseRagKeywords(message) {
     bodyType,
     temperature,
     weatherQuery,
+    allowedSubCategories,
+    excludedSubCategories,
   }
 }
 
@@ -302,6 +326,8 @@ export function buildAgentKeywords(message, parsed = null) {
     subCategories: f.subCategories,
     category,
     strictSubCategory: f.strictSubCategory,
+    allowedSubCategories: f.allowedSubCategories || [],
+    excludedSubCategories: f.excludedSubCategories || [],
     price: {
       min: f.minPrice,
       max: f.maxPrice,

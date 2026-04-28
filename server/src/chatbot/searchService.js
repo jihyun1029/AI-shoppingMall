@@ -45,15 +45,27 @@ function buildBaseQuery(f) {
 
   if (f.categories?.length) q.category = { $in: f.categories }
 
-  if (f.strictSubCategory) {
+  // allowedSubCategories(팬츠 계열 등) > strictSubCategory > subCategories 순서로 적용
+  if (f.allowedSubCategories?.length) {
+    const excluded = f.excludedSubCategories || []
+    const allowed = f.allowedSubCategories.filter((s) => !excluded.includes(s))
+    if (allowed.length) q.subCategory = { $in: allowed }
+  } else if (f.strictSubCategory) {
     q.subCategory = f.strictSubCategory
   } else if (f.subCategories?.length) {
     const regexes = f.subCategories.map((s) => new RegExp(s, 'i'))
-    q.$or = [
+    const orClauses = [
       { subCategory: { $in: f.subCategories } },
       { name: { $in: regexes } },
       { description: { $in: regexes } },
     ]
+    if (f.excludedSubCategories?.length) {
+      q.$and = [{ $or: orClauses }, { subCategory: { $nin: f.excludedSubCategories } }]
+    } else {
+      q.$or = orClauses
+    }
+  } else if (f.excludedSubCategories?.length) {
+    q.subCategory = { $nin: f.excludedSubCategories }
   }
 
   if (f.colors?.length) {
@@ -149,6 +161,14 @@ export async function searchRelaxedBlob(f) {
   if (f.categories?.length) q.category = { $in: f.categories }
   if (f.strictSubCategory) q.subCategory = f.strictSubCategory
   if (f.colors?.length) q.colors = { $in: f.colors.map((c) => new RegExp(`^${c}$`, 'i')) }
+  if (f.allowedSubCategories?.length) {
+    const excluded = f.excludedSubCategories || []
+    const allowed = f.allowedSubCategories.filter((s) => !excluded.includes(s))
+    if (allowed.length) q.subCategory = { $in: allowed }
+  } else if (f.excludedSubCategories?.length) {
+    q.$and = [{ $or: q.$or }, { subCategory: { $nin: f.excludedSubCategories } }]
+    delete q.$or
+  }
 
   return Product.find(q).sort({ isBest: -1, rating: -1, reviewCount: -1 }).limit(CANDIDATE_LIMIT).lean()
 }
@@ -165,7 +185,15 @@ export async function searchConstrainedFallback(f) {
   if (f.categories?.length) q.category = { $in: f.categories }
   if (f.maxPrice != null && !Number.isNaN(f.maxPrice)) q.salePrice = { $lte: f.maxPrice }
   if (f.minPrice != null && !Number.isNaN(f.minPrice)) q.salePrice = { ...q.salePrice, $gte: f.minPrice }
-  if (f.strictSubCategory) q.subCategory = f.strictSubCategory
+  if (f.allowedSubCategories?.length) {
+    const excluded = f.excludedSubCategories || []
+    const allowed = f.allowedSubCategories.filter((s) => !excluded.includes(s))
+    if (allowed.length) q.subCategory = { $in: allowed }
+  } else if (f.strictSubCategory) {
+    q.subCategory = f.strictSubCategory
+  } else if (f.excludedSubCategories?.length) {
+    q.subCategory = { $nin: f.excludedSubCategories }
+  }
   if (f.colors?.length) q.colors = { $in: f.colors.map((c) => new RegExp(`^${c}$`, 'i')) }
 
   return Product.find(q).sort({ isBest: -1, rating: -1, reviewCount: -1 }).limit(8).lean()

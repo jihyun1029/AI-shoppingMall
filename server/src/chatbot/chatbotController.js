@@ -19,9 +19,15 @@ export async function postChatbot(req, res) {
     ? req.body.cartProductIds.map(String)
     : undefined
 
+  const lastContext =
+    req.body?.lastContext && typeof req.body.lastContext === 'object'
+      ? req.body.lastContext
+      : null
+
   try {
     const { intent, keywords, text, products } = await runWorkflow(message, {
       cartProductIds,
+      lastContext,
     })
 
     res.json({ intent, keywords, text, products })

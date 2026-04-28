@@ -43,6 +43,14 @@ export async function validateCandidates(rows, f, opts = {}) {
       dropped.push(`sub-${id}`)
       continue
     }
+    if (f.allowedSubCategories?.length && !f.allowedSubCategories.includes(String(fresh.subCategory))) {
+      dropped.push(`allowedSub-${id}`)
+      continue
+    }
+    if (f.excludedSubCategories?.length && f.excludedSubCategories.includes(String(fresh.subCategory))) {
+      dropped.push(`excludedSub-${id}`)
+      continue
+    }
     out.push(fresh)
   }
 

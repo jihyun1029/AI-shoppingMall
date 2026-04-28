@@ -14,7 +14,7 @@ import { apiFetch } from '../api/client.js'
  * @returns {Promise<{ reply: string, picks: object[], intent?: string, keywords?: object }>}
  * picks 항목은 서버 응답 시 `reason`(추천 이유) 문자열이 포함될 수 있음.
  */
-export async function getChatbotAssistantReply({ message, products, cartProducts }) {
+export async function getChatbotAssistantReply({ message, products, cartProducts, lastContext }) {
   const externalUrl = import.meta.env.VITE_CHATBOT_API_URL
 
   /** 로컬 SQLite 챗봇을 우선 — 상품별 reason 포함 */
@@ -24,6 +24,7 @@ export async function getChatbotAssistantReply({ message, products, cartProducts
       body: JSON.stringify({
         message,
         cartProductIds: (cartProducts || []).map((p) => p.id).filter(Boolean),
+        lastContext: lastContext ?? null,
       }),
     })
     if (data && typeof data.text === 'string' && Array.isArray(data.products)) {

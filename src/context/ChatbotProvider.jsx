@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ChatbotContext } from './chatbotContext'
 import { useCart } from '../hooks/useCart'
 import { useProductCatalog } from '../hooks/useProductCatalog'
@@ -70,6 +70,28 @@ function saveStored(messages) {
   }
 }
 
+/**
+ * 응답 keywords + intent → 다음 질문에 넘길 lastContext 추출.
+ */
+function extractLastContext(intent, keywords) {
+  if (!keywords) return null
+  return {
+    intent: intent || null,
+    temperature: keywords.temperature ?? null,
+    styleKeyword: keywords.styleKeyword ?? null,
+    bodyType: keywords.bodyType ?? null,
+    categories: keywords.categories || [],
+    colors: keywords.colorTokens || [],
+    color: keywords.color ?? null,
+    colorLabel: keywords.colorLabel ?? null,
+    minPrice: keywords.price?.min ?? null,
+    minPriceOp: keywords.price?.minOp ?? null,
+    maxPrice: keywords.price?.max ?? null,
+    maxPriceOp: keywords.price?.maxOp ?? null,
+    excludedSubCategories: keywords.excludedSubCategories || [],
+  }
+}
+
 export function ChatbotProvider({ children }) {
   const { products } = useProductCatalog()
   const { items } = useCart()
@@ -77,6 +99,10 @@ export function ChatbotProvider({ children }) {
   const [messages, setMessages] = useState(() => loadStored() ?? [welcomeMessage()])
   const [sending, setSending] = useState(false)
   const [toast, setToast] = useState('')
+  // 이전 대화 컨텍스트 (다음 요청에 전달)
+  const [lastContext, setLastContext] = useState(null)
+  const lastContextRef = useRef(lastContext)
+  lastContextRef.current = lastContext
 
   useEffect(() => {
     saveStored(messages)
@@ -118,6 +144,7 @@ export function ChatbotProvider({ children }) {
           message: trimmed,
           products,
           cartProducts,
+          lastContext: lastContextRef.current,
         })
         const ids = picks.map((p) => String(p.id))
         setMessages((prev) => [
@@ -134,6 +161,9 @@ export function ChatbotProvider({ children }) {
             ...(picks.length ? { recommendedProducts: picks } : {}),
           },
         ])
+        // 다음 질문을 위한 컨텍스트 저장
+        const ctx = extractLastContext(intent, keywords)
+        if (ctx) setLastContext(ctx)
       } catch {
         setMessages((prev) => [
           ...prev,
@@ -159,6 +189,7 @@ export function ChatbotProvider({ children }) {
       /* ignore */
     }
     setMessages([welcomeMessage()])
+    setLastContext(null)
   }, [])
 
   const value = useMemo(
