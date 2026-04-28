@@ -153,9 +153,12 @@ export function ChatbotProvider({ children }) {
   )
 
   const clearConversation = useCallback(() => {
-    const next = [welcomeMessage()]
-    setMessages(next)
-    saveStored(next)
+    try {
+      sessionStorage.removeItem(STORAGE_KEY)
+    } catch {
+      /* ignore */
+    }
+    setMessages([welcomeMessage()])
   }, [])
 
   const value = useMemo(
